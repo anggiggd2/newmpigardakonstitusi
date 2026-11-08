@@ -1,0 +1,3141 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Garda Konstitusi - MPI Pendidikan Pancasila Kelas XII</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Google Fonts: Plus Jakarta Sans -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- Three.js r128 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <script>
+        // Global Image Fallback & Custom Upload Handlers (Defined early in <head>)
+        window.handleLogoLoad = function(imgEl) {
+            if (!imgEl) return;
+            imgEl.classList.remove('hidden');
+            const fb = document.getElementById('top-bar-logo-fallback');
+            if (fb) fb.classList.add('hidden');
+        };
+
+        window.handleLogoFallback = function(imgEl) {
+            if (!imgEl) return;
+            try {
+                const savedLogo = localStorage.getItem('garda_custom_logo');
+                if (savedLogo && imgEl.src !== savedLogo) {
+                    imgEl.src = savedLogo;
+                    return;
+                }
+            } catch (e) {}
+
+            const candidates = [
+                'assets/images/logo.jpg',
+                'assets/images/logo.png',
+                'assets/images/logo.jpeg',
+                'logo.jpg',
+                'logo.png',
+                'assets/logo.jpg',
+                'assets/logo.png'
+            ];
+            let step = parseInt(imgEl.dataset.fallbackStep || '0', 10);
+            step++;
+            if (step < candidates.length) {
+                imgEl.dataset.fallbackStep = String(step);
+                imgEl.src = candidates[step];
+            } else {
+                imgEl.classList.add('hidden');
+                const fb = document.getElementById('top-bar-logo-fallback');
+                if (fb) fb.classList.remove('hidden');
+            }
+        };
+
+        window.handleProfileImgFallback = function(imgEl) {
+            if (!imgEl) return;
+            try {
+                const savedPhoto = localStorage.getItem('garda_dev_profile_photo');
+                if (savedPhoto && imgEl.src !== savedPhoto) {
+                    imgEl.src = savedPhoto;
+                    return;
+                }
+            } catch (e) {}
+
+            const candidates = [
+                'assets/images/posedepan.jpg',
+                'assets/images/posedepan.jpeg',
+                'assets/images/posedepan.png',
+                'posedepan.jpg',
+                'posedepan.jpeg',
+                'posedepan.png',
+                'assets/posedepan.jpg',
+                'assets/posedepan.png',
+                './assets/images/posedepan.jpg',
+                './assets/images/posedepan.png',
+                'images/posedepan.jpg',
+                'images/posedepan.png',
+                'assets/images/foto.jpg',
+                'assets/images/foto.png'
+            ];
+            let step = parseInt(imgEl.dataset.fallbackStep || '0', 10);
+            step++;
+            if (step < candidates.length) {
+                imgEl.dataset.fallbackStep = String(step);
+                imgEl.src = candidates[step];
+            } else {
+                imgEl.classList.add('hidden');
+                const fb = document.getElementById('dev-profile-fallback');
+                if (fb) {
+                    fb.classList.remove('hidden');
+                    fb.classList.add('flex');
+                }
+            }
+        };
+
+        window.loadCustomDeveloperPhoto = function(event) {
+            const file = event.target.files && event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const dataUrl = e.target.result;
+                const imgEl = document.getElementById('dev-profile-img');
+                const fbEl = document.getElementById('dev-profile-fallback');
+                if (imgEl) {
+                    imgEl.src = dataUrl;
+                    imgEl.classList.remove('hidden');
+                }
+                if (fbEl) {
+                    fbEl.classList.add('hidden');
+                    fbEl.classList.remove('flex');
+                }
+                try {
+                    localStorage.setItem('garda_dev_profile_photo', dataUrl);
+                } catch (err) {}
+            };
+            reader.readAsDataURL(file);
+        };
+
+        window.loadCustomLogoFile = function(event) {
+            const file = event.target.files && event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const dataUrl = e.target.result;
+                const imgEl = document.getElementById('top-bar-custom-logo');
+                const fbEl = document.getElementById('top-bar-logo-fallback');
+                if (imgEl) {
+                    imgEl.src = dataUrl;
+                    imgEl.classList.remove('hidden');
+                }
+                if (fbEl) fbEl.classList.add('hidden');
+                try {
+                    localStorage.setItem('garda_custom_logo', dataUrl);
+                } catch (err) {}
+            };
+            reader.readAsDataURL(file);
+        };
+
+        window.handleCoverBgLoad = function(imgEl) {
+            if (!imgEl) return;
+            imgEl.classList.remove('hidden');
+        };
+
+        window.handleCoverBgFallback = function(imgEl) {
+            if (!imgEl) return;
+            try {
+                const savedBg = localStorage.getItem('garda_custom_cover_bg');
+                if (savedBg && imgEl.src !== savedBg) {
+                    imgEl.src = savedBg;
+                    return;
+                }
+            } catch (e) {}
+
+            const candidates = [
+                'assets/images/bg.jpg',
+                'assets/images/bg.png',
+                'assets/images/bg.jpeg',
+                'assets/images/background.jpg',
+                'assets/images/background.png',
+                'assets/images/cover.jpg',
+                'assets/images/cover.png',
+                'assets/images/latar.jpg',
+                'assets/images/latar.png',
+                'bg.jpg',
+                'bg.png',
+                'background.jpg',
+                'cover.jpg',
+                'assets/bg.jpg',
+                'assets/background.jpg'
+            ];
+            let step = parseInt(imgEl.dataset.fallbackStep || '0', 10);
+            step++;
+            if (step < candidates.length) {
+                imgEl.dataset.fallbackStep = String(step);
+                imgEl.src = candidates[step];
+            } else {
+                imgEl.classList.add('hidden');
+            }
+        };
+
+        window.loadCustomCoverBgFile = function(event) {
+            const file = event.target.files && event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const dataUrl = e.target.result;
+                const imgEl = document.getElementById('cover-custom-bg');
+                if (imgEl) {
+                    imgEl.src = dataUrl;
+                    imgEl.classList.remove('hidden');
+                }
+                try {
+                    localStorage.setItem('garda_custom_cover_bg', dataUrl);
+                } catch (err) {}
+            };
+            reader.readAsDataURL(file);
+        };
+    </script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-user-select: none;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: #020617;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        /* Strict 16:9 Responsive Stage */
+        #app-stage-16x9 {
+            position: relative;
+            width: min(100dvw, 177.78dvh);
+            height: min(56.25dvw, 100dvh);
+            aspect-ratio: 16 / 9;
+            background: radial-gradient(circle at 50% 25%, #1e293b 0%, #090d16 70%, #020617 100%);
+            overflow: hidden;
+            box-shadow: 0 0 60px rgba(0, 0, 0, 0.9);
+            border: 1px solid rgba(251, 191, 36, 0.22);
+        }
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.88);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(251, 191, 36, 0.35);
+        }
+        .gold-gradient-text {
+            background: linear-gradient(135deg, #fef08a 0%, #fbbf24 45%, #f59e0b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .custom-scroll::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scroll::-webkit-scrollbar-track {
+            background: rgba(15, 23, 42, 0.6);
+            border-radius: 9999px;
+        }
+        .custom-scroll::-webkit-scrollbar-thumb {
+            background: rgba(251, 191, 36, 0.55);
+            border-radius: 9999px;
+        }
+        .menu-card-hover {
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .menu-card-hover:hover {
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 14px 28px -8px rgba(251, 191, 36, 0.3);
+            border-color: rgba(251, 191, 36, 0.8);
+        }
+        @keyframes floatSlow {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
+        }
+        .animate-float {
+            animation: floatSlow 3.4s ease-in-out infinite;
+        }
+        /* Mobile compact adjustments inside 16:9 stage */
+        @media (max-width: 900px), (max-height: 520px) {
+            #unified-top-bar {
+                height: 2.35rem !important;
+                padding-left: 0.5rem !important;
+                padding-right: 0.5rem !important;
+            }
+            .dpad-btn {
+                width: 2.35rem !important;
+                height: 2.35rem !important;
+                font-size: 0.85rem !important;
+            }
+            #mobile-jump-btn, #btn-interact-prompt {
+                padding: 0.45rem 0.75rem !important;
+                font-size: 0.72rem !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div id="app-stage-16x9">
+
+    <!-- UNIFIED TOP BAR -->
+    <header id="unified-top-bar" class="absolute top-0 left-0 right-0 h-12 sm:h-14 z-40 px-3 sm:px-5 flex items-center justify-between bg-slate-950/80 backdrop-blur-md border-b border-amber-400/25">
+        <!-- Left: Custom Star Logo + Title -->
+        <div class="flex items-center gap-2.5 sm:gap-3 min-w-0">
+            <div onclick="document.getElementById('custom-logo-input').click()" title="Klik untuk mengganti logo dari perangkat (atau simpan di assets/images/logo.jpg)" class="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-br from-amber-400 via-amber-500 to-yellow-600 p-0.5 shadow-lg shadow-amber-500/25 flex items-center justify-center cursor-pointer shrink-0 overflow-hidden relative group">
+                <img id="top-bar-custom-logo"
+                     src="assets/images/logo.jpg"
+                     alt="Logo"
+                     class="w-full h-full object-cover rounded-[10px] hidden"
+                     onload="window.handleLogoLoad(this)"
+                     onerror="window.handleLogoFallback(this)">
+                <div id="top-bar-logo-fallback" class="w-full h-full rounded-[10px] bg-slate-950 flex items-center justify-center">
+                    <i class="fa-solid fa-star text-amber-400 text-base sm:text-xl"></i>
+                </div>
+            </div>
+            <input type="file" id="custom-logo-input" accept="image/*" class="hidden" onchange="window.loadCustomLogoFile(event)">
+
+            <div class="leading-tight truncate">
+                <div class="text-[10px] sm:text-xs font-extrabold tracking-wider text-amber-400 uppercase truncate">Pendidikan Pancasila • Kelas XII</div>
+                <div class="text-xs sm:text-sm font-black text-white tracking-tight truncate">GARDA KONSTITUSI</div>
+            </div>
+        </div>
+
+        <!-- Center: Active only during 3D Game (Zone, 3 Hearts, Shortcuts) -->
+        <div id="game-hud-center" class="hidden items-center gap-1.5 sm:gap-2.5">
+            <div class="px-2.5 py-1 rounded-xl bg-slate-900/90 border border-amber-400/35 flex items-center gap-2">
+                <span id="hud-zone-badge" class="text-[10px] sm:text-xs font-extrabold text-amber-300 whitespace-nowrap">Zona 1: Pulau Tropika</span>
+                <span class="text-slate-600">|</span>
+                <div id="hud-hearts" class="flex items-center gap-0.5 text-rose-500 text-xs sm:text-sm" title="Nyawa Zona">
+                    <i class="fa-solid fa-heart"></i>
+                    <i class="fa-solid fa-heart"></i>
+                    <i class="fa-solid fa-heart"></i>
+                </div>
+            </div>
+            <button onclick="teleportNearActiveNPC()" class="px-2 py-1 rounded-lg bg-emerald-600/90 hover:bg-emerald-500 text-white text-[10px] sm:text-xs font-bold flex items-center gap-1 shadow transition" title="Lompat ke Warga Pemandu">
+                <i class="fa-solid fa-user-check"></i> <span class="hidden md:inline">Warga</span>
+            </button>
+            <button onclick="teleportNearActiveBox()" class="px-2 py-1 rounded-lg bg-amber-500/90 hover:bg-amber-400 text-slate-950 text-[10px] sm:text-xs font-extrabold flex items-center gap-1 shadow transition" title="Lompat ke Kotak Misi">
+                <i class="fa-solid fa-box-open"></i> <span class="hidden md:inline">Kotak</span>
+            </button>
+            <button onclick="exitGameToCover()" class="px-2 py-1 rounded-lg bg-slate-800 hover:bg-rose-600 text-white text-[10px] sm:text-xs font-bold flex items-center gap-1 border border-slate-600 transition" title="Kembali ke Menu Awal">
+                <i class="fa-solid fa-house"></i> <span class="hidden md:inline">Menu</span>
+            </button>
+        </div>
+
+        <!-- Right: Score, Custom Cover BG, Music & Fullscreen -->
+        <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
+            <div id="game-hud-score" class="hidden items-center gap-1.5 px-2.5 py-1 rounded-xl bg-slate-900/90 border border-emerald-400/35 text-[10px] sm:text-xs font-extrabold">
+                <span class="text-amber-300"><i class="fa-solid fa-trophy mr-1"></i><span id="hud-score-val">0</span></span>
+                <span class="text-slate-500">•</span>
+                <span class="text-emerald-300"><i class="fa-solid fa-cube mr-1"></i><span id="hud-box-val">0/10</span></span>
+            </div>
+            <button onclick="document.getElementById('custom-cover-bg-input').click()" class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-slate-900 hover:bg-slate-800 border border-amber-400/35 text-amber-300 flex items-center justify-center transition" title="Ganti Gambar Latar Cover (atau simpan di assets/images/bg.jpg)">
+                <i class="fa-solid fa-image text-xs sm:text-sm"></i>
+            </button>
+            <input type="file" id="custom-cover-bg-input" accept="image/*" class="hidden" onchange="window.loadCustomCoverBgFile(event)">
+            <button id="btn-audio-toggle" onclick="toggleAudioMute()" class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-slate-900 hover:bg-slate-800 border border-amber-400/35 text-amber-300 flex items-center justify-center transition" title="Musik Latar Santai">
+                <i id="icon-audio-toggle" class="fa-solid fa-volume-high text-xs sm:text-sm"></i>
+            </button>
+            <button onclick="toggleFullScreen()" class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-slate-900 hover:bg-slate-800 border border-amber-400/35 text-amber-300 flex items-center justify-center transition" title="Layar Penuh">
+                <i class="fa-solid fa-expand text-xs sm:text-sm"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- MAIN COVER SCREEN -->
+    <main id="main-cover-screen" class="absolute inset-0 pt-14 sm:pt-16 px-4 sm:px-8 pb-6 sm:pb-10 flex flex-col items-center justify-center gap-3 sm:gap-5 z-20 overflow-hidden">
+        <!-- Custom Cover Background Image Layer (from assets/images/bg.jpg or custom upload) -->
+        <img id="cover-custom-bg"
+             src="assets/images/bg.jpg"
+             alt="Latar Cover"
+             class="absolute inset-0 w-full h-full object-cover object-center z-0 hidden pointer-events-none"
+             onload="window.handleCoverBgLoad(this)"
+             onerror="window.handleCoverBgFallback(this)">
+        <!-- Subtle gradient overlay so text & menu remain crisp over any custom background -->
+        <div class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/50 to-slate-950/30 z-0 pointer-events-none"></div>
+
+        <!-- Decorative Ambient Glows -->
+        <div class="absolute -top-24 -left-24 w-80 h-80 rounded-full bg-amber-500/10 blur-3xl pointer-events-none z-0"></div>
+        <div class="absolute -bottom-28 -right-24 w-96 h-96 rounded-full bg-sky-500/10 blur-3xl pointer-events-none z-0"></div>
+
+        <!-- Top Badge & Hero Title -->
+        <div class="relative z-10 w-full max-w-5xl flex flex-col items-center text-center mt-1 sm:mt-2">
+            <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-amber-500/15 border border-amber-400/40 text-amber-300 text-[10px] sm:text-xs font-extrabold tracking-widest uppercase mb-1.5 shadow">
+                <i class="fa-solid fa-shield-halved"></i> Media Pembelajaran Interaktif • Fase F Kelas XII
+            </div>
+
+            <h1 class="text-2xl sm:text-4xl md:text-5xl font-black tracking-tight uppercase gold-gradient-text drop-shadow-md leading-none mb-2">
+                GARDA KONSTITUSI
+            </h1>
+
+            <!-- Bab & Subbab 1 Baris di Dalam Frame -->
+            <div class="w-full max-w-4xl rounded-2xl bg-slate-900/85 border border-amber-400/35 px-3 sm:px-5 py-2 sm:py-2.5 shadow-xl flex flex-col items-center justify-center gap-1">
+                <div class="w-full overflow-hidden text-center whitespace-nowrap font-extrabold text-white" style="font-size: clamp(0.62rem, 1.35vw, 1.02rem);">
+                    <span class="text-amber-400">BAB 3:</span> Berperilaku Sesuai Nilai-Nilai Pancasila &amp; Kepatuhan terhadap Norma serta UUD NRI Tahun 1945
+                </div>
+                <div class="w-full overflow-hidden text-center whitespace-nowrap font-semibold text-sky-300" style="font-size: clamp(0.58rem, 1.18vw, 0.9rem);">
+                    <span class="text-emerald-400 font-bold">Subbab A:</span> Perilaku Warga Negara yang Berkesadaran Hukum Berdasarkan UUD NRI Tahun 1945
+                </div>
+            </div>
+        </div>
+
+        <!-- 5 Menu Cards Grid (Balanced slightly higher on the cover) -->
+        <div class="relative z-10 w-full max-w-5xl grid grid-cols-5 gap-2.5 sm:gap-4">
+            <button onclick="openModal('modal-petunjuk')" class="menu-card-hover glass-panel rounded-2xl p-2.5 sm:p-4 flex flex-col items-center justify-center text-center gap-1.5 sm:gap-2 group">
+                <div class="w-10 h-10 sm:w-14 sm:h-14 rounded-2xl bg-sky-500/20 border border-sky-400/40 flex items-center justify-center text-sky-300 group-hover:scale-110 transition">
+                    <i class="fa-solid fa-compass text-lg sm:text-2xl"></i>
+                </div>
+                <div class="font-extrabold text-white text-xs sm:text-base leading-tight">Petunjuk</div>
+                <div class="text-[9px] sm:text-xs text-slate-300 leading-tight hidden sm:block">Panduan &amp; Kontrol</div>
+            </button>
+
+            <button onclick="openModal('modal-cptp')" class="menu-card-hover glass-panel rounded-2xl p-2.5 sm:p-4 flex flex-col items-center justify-center text-center gap-1.5 sm:gap-2 group">
+                <div class="w-10 h-10 sm:w-14 sm:h-14 rounded-2xl bg-emerald-500/20 border border-emerald-400/40 flex items-center justify-center text-emerald-300 group-hover:scale-110 transition">
+                    <i class="fa-solid fa-bullseye text-lg sm:text-2xl"></i>
+                </div>
+                <div class="font-extrabold text-white text-xs sm:text-base leading-tight">CP &amp; TP</div>
+                <div class="text-[9px] sm:text-xs text-slate-300 leading-tight hidden sm:block">Capaian &amp; Tujuan</div>
+            </button>
+
+            <button onclick="openModal('modal-materi')" class="menu-card-hover glass-panel rounded-2xl p-2.5 sm:p-4 flex flex-col items-center justify-center text-center gap-1.5 sm:gap-2 group relative border-amber-400/60">
+                <span id="badge-materi-status" class="absolute -top-2 right-2 px-2 py-0.5 rounded-full bg-amber-400 text-slate-950 font-black text-[8px] sm:text-[10px] uppercase shadow">Wajib</span>
+                <div class="w-10 h-10 sm:w-14 sm:h-14 rounded-2xl bg-amber-500/20 border border-amber-400/50 flex items-center justify-center text-amber-300 group-hover:scale-110 transition">
+                    <i class="fa-solid fa-book-open-reader text-lg sm:text-2xl"></i>
+                </div>
+                <div class="font-extrabold text-amber-300 text-xs sm:text-base leading-tight">Materi</div>
+                <div class="text-[9px] sm:text-xs text-slate-300 leading-tight hidden sm:block">12 Slide Konstitusi</div>
+            </button>
+
+            <button onclick="openModal('modal-profil')" class="menu-card-hover glass-panel rounded-2xl p-2.5 sm:p-4 flex flex-col items-center justify-center text-center gap-1.5 sm:gap-2 group">
+                <div class="w-10 h-10 sm:w-14 sm:h-14 rounded-2xl bg-purple-500/20 border border-purple-400/40 flex items-center justify-center text-purple-300 group-hover:scale-110 transition">
+                    <i class="fa-solid fa-user-tie text-lg sm:text-2xl"></i>
+                </div>
+                <div class="font-extrabold text-white text-xs sm:text-base leading-tight">Pengembang</div>
+                <div class="text-[9px] sm:text-xs text-slate-300 leading-tight hidden sm:block">Profil Guru</div>
+            </button>
+
+            <button onclick="openModal('modal-referensi')" class="menu-card-hover glass-panel rounded-2xl p-2.5 sm:p-4 flex flex-col items-center justify-center text-center gap-1.5 sm:gap-2 group">
+                <div class="w-10 h-10 sm:w-14 sm:h-14 rounded-2xl bg-rose-500/20 border border-rose-400/40 flex items-center justify-center text-rose-300 group-hover:scale-110 transition">
+                    <i class="fa-solid fa-Scroll text-lg sm:text-2xl fa-landmark"></i>
+                </div>
+                <div class="font-extrabold text-white text-xs sm:text-base leading-tight">Referensi</div>
+                <div class="text-[9px] sm:text-xs text-slate-300 leading-tight hidden sm:block">Sumber Resmi</div>
+            </button>
+        </div>
+
+        <!-- Bottom Action CTA (Locked until Materi is completed) -->
+        <div class="relative z-10 w-full max-w-3xl flex flex-col items-center gap-1.5 mt-1">
+            <button id="btn-start-adventure" onclick="handleStartAdventureClick()" class="px-7 sm:px-10 py-2.5 sm:py-3.5 rounded-2xl bg-slate-800/95 hover:bg-slate-700 border-2 border-amber-400/50 text-slate-300 font-black text-sm sm:text-lg tracking-wide shadow-xl flex items-center gap-3 transition transform active:scale-95">
+                <i id="icon-start-adventure" class="fa-solid fa-lock text-amber-400 text-base sm:text-xl"></i>
+                <span id="label-start-adventure">MULAI PETUALANGAN (TERKUNCI)</span>
+            </button>
+            <div id="cover-lock-notice" class="hidden px-3.5 py-1 rounded-full bg-rose-950/90 border border-rose-400/60 text-rose-200 text-[10px] sm:text-xs font-bold items-center gap-1.5 shadow-lg">
+                <i class="fa-solid fa-circle-exclamation text-amber-400"></i>
+                <span>Selesaikan membaca menu <strong>Materi (Slide 1 s.d. 12)</strong> terlebih dahulu untuk membuka petualangan!</span>
+            </div>
+        </div>
+
+        <!-- Bottom Subtitle Positioned Lower Near the Bottom Edge -->
+        <p class="absolute bottom-2.5 sm:bottom-3.5 left-0 right-0 z-10 text-[10px] sm:text-xs font-semibold text-slate-200 tracking-wide text-center drop-shadow px-4 pointer-events-none">
+            Pelajari materi - mainkan petualangan - selesaikan misi zona - raih ketuntasan belajar
+        </p>
+    </main>
+
+    <!-- 3D GAMEPLAY SCREEN -->
+    <section id="game-screen-container" class="hidden absolute inset-0 pt-12 sm:pt-14 z-10 overflow-hidden">
+        <!-- Three.js Canvas Mount -->
+        <div id="three-canvas-holder" class="w-full h-full relative cursor-grab active:cursor-grabbing"></div>
+
+        <!-- Top-Left Mission Guide Banner -->
+        <div class="absolute top-14 sm:top-16 left-3 sm:left-4 z-20 max-w-xs sm:max-w-md bg-slate-950/80 backdrop-blur-md border border-amber-400/40 rounded-2xl px-3.5 py-2 shadow-xl pointer-events-none">
+            <div class="text-[10px] sm:text-xs font-extrabold text-amber-300 uppercase flex items-center gap-1.5">
+                <i class="fa-solid fa-route"></i> <span id="hud-mission-title">Misi Aktif Zona 1</span>
+            </div>
+            <p id="hud-mission-desc" class="text-[11px] sm:text-xs text-slate-200 leading-snug mt-0.5">
+                Temui Warga Pemandu (Somad atau Kiki) untuk mendapatkan petunjuk arah menuju Kotak Misi!
+            </p>
+        </div>
+
+        <!-- Top-Right Mini Interactive Precision Compass (U, T, S, B) -->
+        <div class="absolute top-14 sm:top-16 right-3 sm:right-4 z-20 flex flex-col items-center gap-1 select-none">
+            <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-slate-950/90 border-2 border-amber-400/60 shadow-2xl flex items-center justify-center relative overflow-hidden">
+                <!-- Outer Degree Ring Marks -->
+                <svg class="w-full h-full absolute inset-0 pointer-events-none opacity-45" viewBox="0 0 100 100">
+                    <circle cx="50" cy="50" r="45" fill="none" stroke="#fbbf24" stroke-width="1" stroke-dasharray="2 4" />
+                    <line x1="50" y1="3" x2="50" y2="9" stroke="#f43f5e" stroke-width="2" />
+                    <line x1="97" y1="50" x2="91" y2="50" stroke="#fbbf24" stroke-width="1.5" />
+                    <line x1="50" y1="97" x2="50" y2="91" stroke="#94a3b8" stroke-width="1.5" />
+                    <line x1="3" y1="50" x2="9" y2="50" stroke="#38bdf8" stroke-width="1.5" />
+                </svg>
+                <!-- Rotating Compass Dial & Precision Diamond Needle -->
+                <div id="compass-dial" class="w-full h-full relative will-change-transform">
+                    <span class="absolute top-1 left-1/2 -translate-x-1/2 text-[9px] sm:text-[10px] font-black text-rose-400 leading-none drop-shadow">U</span>
+                    <span class="absolute bottom-1 left-1/2 -translate-x-1/2 text-[8px] sm:text-[9px] font-extrabold text-slate-300 leading-none">S</span>
+                    <span class="absolute right-1.5 top-1/2 -translate-y-1/2 text-[8px] sm:text-[9px] font-extrabold text-amber-300 leading-none">T</span>
+                    <span class="absolute left-1.5 top-1/2 -translate-y-1/2 text-[8px] sm:text-[9px] font-extrabold text-sky-300 leading-none">B</span>
+                    <!-- Precision SVG Magnetic Needle (Red = North, Silver = South) -->
+                    <svg class="w-8 h-8 sm:w-9 sm:h-9 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" viewBox="0 0 64 64">
+                        <!-- North Pointer (Red) -->
+                        <polygon points="32,8 37,32 32,29 27,32" fill="#f43f5e" />
+                        <polygon points="32,8 32,29 27,32" fill="#fb7185" />
+                        <!-- South Pointer (Silver/White) -->
+                        <polygon points="32,56 37,32 32,35 27,32" fill="#cbd5e1" />
+                        <polygon points="32,56 32,35 37,32" fill="#94a3b8" />
+                        <!-- Center Brass Pivot -->
+                        <circle cx="32" cy="32" r="3.8" fill="#fbbf24" stroke="#0f172a" stroke-width="1.5" />
+                    </svg>
+                </div>
+            </div>
+            <div class="px-2 py-0.5 rounded-full bg-slate-950/85 border border-amber-400/35 text-[9px] font-extrabold text-amber-300 tracking-tight shadow">
+                <span id="compass-heading-text">U • 0°</span>
+            </div>
+        </div>
+
+        <!-- Center Alert / Fall Toast -->
+        <div id="game-toast-banner" class="hidden absolute top-28 left-1/2 -translate-x-1/2 z-30 px-4 py-2 rounded-2xl bg-slate-950/95 border-2 border-amber-400 text-white font-extrabold text-xs sm:text-sm shadow-2xl items-center gap-2 text-center max-w-md">
+            <i class="fa-solid fa-circle-info text-amber-400"></i>
+            <span id="game-toast-text">Pesan Sistem</span>
+        </div>
+
+        <!-- Bottom-Left D-Pad Controls -->
+        <div class="absolute bottom-3 left-3 sm:bottom-5 sm:left-5 z-20 flex flex-col items-center gap-1 select-none">
+            <button onpointerdown="setMoveKey('forward', true)" onpointerup="setMoveKey('forward', false)" onpointerleave="setMoveKey('forward', false)" class="dpad-btn w-11 h-11 rounded-xl bg-slate-900/85 hover:bg-amber-500 hover:text-slate-950 text-white border border-amber-400/40 flex items-center justify-center shadow-lg active:scale-95">
+                <i class="fa-solid fa-chevron-up"></i>
+            </button>
+            <div class="flex items-center gap-1">
+                <button onpointerdown="setMoveKey('left', true)" onpointerup="setMoveKey('left', false)" onpointerleave="setMoveKey('left', false)" class="dpad-btn w-11 h-11 rounded-xl bg-slate-900/85 hover:bg-amber-500 hover:text-slate-950 text-white border border-amber-400/40 flex items-center justify-center shadow-lg active:scale-95">
+                    <i class="fa-solid fa-chevron-left"></i>
+                </button>
+                <button onpointerdown="setMoveKey('backward', true)" onpointerup="setMoveKey('backward', false)" onpointerleave="setMoveKey('backward', false)" class="dpad-btn w-11 h-11 rounded-xl bg-slate-900/85 hover:bg-amber-500 hover:text-slate-950 text-white border border-amber-400/40 flex items-center justify-center shadow-lg active:scale-95">
+                    <i class="fa-solid fa-chevron-down"></i>
+                </button>
+                <button onpointerdown="setMoveKey('right', true)" onpointerup="setMoveKey('right', false)" onpointerleave="setMoveKey('right', false)" class="dpad-btn w-11 h-11 rounded-xl bg-slate-900/85 hover:bg-amber-500 hover:text-slate-950 text-white border border-amber-400/40 flex items-center justify-center shadow-lg active:scale-95">
+                    <i class="fa-solid fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Bottom-Right Interact & Jump Buttons -->
+        <div class="absolute bottom-3 right-3 sm:bottom-5 sm:right-5 z-20 flex items-center gap-2.5 select-none">
+            <button id="btn-interact-prompt" onclick="triggerNearbyInteraction()" class="hidden px-4 py-2.5 rounded-2xl bg-gradient-to-r from-emerald-400 to-teal-500 text-slate-950 font-black text-xs sm:text-sm shadow-xl border-2 border-white items-center gap-2 animate-bounce">
+                <i class="fa-solid fa-hand-pointer"></i>
+                <span id="interact-prompt-label">BUKA (E / Shift)</span>
+            </button>
+            <button id="mobile-jump-btn" onpointerdown="triggerCharacterJump()" class="px-4 py-2.5 sm:px-5 sm:py-3 rounded-2xl bg-gradient-to-r from-amber-400 to-orange-500 text-slate-950 font-black text-xs sm:text-sm shadow-xl border border-amber-200 flex items-center gap-2 active:scale-95">
+                <i class="fa-solid fa-person-arrow-up-from-line"></i> LOMPAT
+            </button>
+        </div>
+    </section>
+
+    <!-- MODAL: PETUNJUK PENGGUNAAN -->
+    <div id="modal-petunjuk" class="hidden absolute inset-0 z-50 bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-5 pt-14">
+        <div class="glass-panel w-[92%] h-[84%] rounded-3xl flex flex-col overflow-hidden shadow-2xl">
+            <div class="px-5 py-3.5 bg-slate-900/90 border-b border-sky-400/30 flex items-center justify-between shrink-0">
+                <h3 class="text-base sm:text-xl font-extrabold text-sky-300 flex items-center gap-2.5">
+                    <i class="fa-solid fa-compass"></i> Petunjuk Penggunaan &amp; Aturan Petualangan
+                </h3>
+                <button onclick="closeModal('modal-petunjuk')" class="w-9 h-9 rounded-xl bg-slate-800 hover:bg-rose-600 text-white flex items-center justify-center transition">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="p-4 sm:p-6 overflow-y-auto custom-scroll flex-1 grid grid-cols-1 md:grid-cols-2 gap-4 text-slate-200 text-xs sm:text-sm">
+                <div class="bg-slate-900/80 border border-sky-400/30 rounded-2xl p-4 space-y-2.5">
+                    <div class="font-extrabold text-amber-300 text-sm sm:text-base flex items-center gap-2">
+                        <i class="fa-solid fa-list-check"></i> 1. Alur Belajar Mandiri
+                    </div>
+                    <p class="leading-relaxed">1. Buka menu <strong>Materi (12 Slide)</strong> terlebih dahulu dan pelajari hingga slide ke-12 untuk membuka kunci tombol <strong>MULAI PETUALANGAN</strong>.</p>
+                    <p class="leading-relaxed">2. Kustomisasi <strong>Nama Panggilan</strong>, <strong>Karakter (Putra / Putri)</strong>, dan <strong>Pakaian Konstitusi</strong>.</p>
+                    <p class="leading-relaxed">3. Jelajahi <strong>5 Zona Kepulauan</strong> (Tropika, Senja, Lembah Mendung, Puncak Salju, dan Benteng Badai), sapa <strong>Warga Pemandu</strong>, lalu panjat bukit berundak (<em>umpak-umpakan</em>) untuk menemukan <strong>Kotak 1 s.d. Kotak 10</strong>.</p>
+                </div>
+                <div class="bg-slate-900/80 border border-emerald-400/30 rounded-2xl p-4 space-y-2.5">
+                    <div class="font-extrabold text-emerald-300 text-sm sm:text-base flex items-center gap-2">
+                        <i class="fa-solid fa-gamepad"></i> 2. Kendali &amp; Sistem 3 Hati ❤️
+                    </div>
+                    <p class="leading-relaxed">• <strong>Gerak Karakter:</strong> Gunakan tombol <strong>W, A, S, D</strong> / <strong>Panah Keyboard</strong> atau tombol <strong>D-Pad</strong> di kiri bawah layar.</p>
+                    <p class="leading-relaxed">• <strong>Lompat &amp; Kamera 360°:</strong> Tekan <strong>Spasi</strong> / tombol <strong>LOMPAT</strong> untuk menaiki umpak. Geser layar/mouse untuk memutar kamera 360° keliling maupun atas-bawah.</p>
+                    <p class="leading-relaxed">• <strong>Buka Kotak / Bicara:</strong> Tekan <strong>E</strong> atau <strong>Shift</strong> (atau ketuk tombol hijau yang muncul). Setiap zona memiliki <strong>3 Hati ❤️</strong>. Jawab kedua kotak di zona tersebut agar <strong>Kunci Emas 3D</strong> muncul untuk membuka gerbang jembatan!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: CP & TP -->
+    <div id="modal-cptp" class="hidden absolute inset-0 z-50 bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-5 pt-14">
+        <div class="glass-panel w-[92%] h-[84%] rounded-3xl flex flex-col overflow-hidden shadow-2xl">
+            <div class="px-5 py-3.5 bg-slate-900/90 border-b border-emerald-400/30 flex items-center justify-between shrink-0">
+                <h3 class="text-base sm:text-xl font-extrabold text-emerald-300 flex items-center gap-2.5">
+                    <i class="fa-solid fa-bullseye"></i> Capaian Pembelajaran (CP) &amp; Tujuan Pembelajaran (TP)
+                </h3>
+                <button onclick="closeModal('modal-cptp')" class="w-9 h-9 rounded-xl bg-slate-800 hover:bg-rose-600 text-white flex items-center justify-center transition">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="p-4 sm:p-6 overflow-y-auto custom-scroll flex-1 grid grid-cols-1 md:grid-cols-2 gap-4 text-slate-200 text-xs sm:text-sm">
+                <div class="bg-slate-900/80 border border-amber-400/35 rounded-2xl p-4 space-y-2.5">
+                    <span class="px-3 py-1 rounded-full bg-amber-500/20 text-amber-300 font-extrabold text-xs uppercase">Elemen UUD NRI Tahun 1945 • Fase F Kelas XII</span>
+                    <h4 class="font-extrabold text-white text-base sm:text-lg">Capaian Pembelajaran (CP)</h4>
+                    <p class="leading-relaxed text-slate-200">
+                        Peserta didik mampu menganalisis dan menunjukkan sikap serta perilaku warga negara yang berkesadaran hukum berdasarkan Undang-Undang Dasar Negara Republik Indonesia Tahun 1945 dalam kehidupan sehari-hari di lingkungan keluarga, sekolah, masyarakat, bangsa, dan negara.
+                    </p>
+                </div>
+                <div class="bg-slate-900/80 border border-emerald-400/35 rounded-2xl p-4 space-y-2">
+                    <span class="px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 font-extrabold text-xs uppercase">Tujuan Pembelajaran (TP)</span>
+                    <ul class="space-y-2 leading-relaxed list-disc pl-5 text-slate-200">
+                        <li>Menguraikan kedudukan UUD NRI Tahun 1945 sebagai hukum dasar tertulis tertinggi dan sumber hukum nasional.</li>
+                        <li>Mengidentifikasi pelaksanaan hak dan kewajiban warga negara sesuai Pasal 26 sampai Pasal 34 UUD NRI Tahun 1945.</li>
+                        <li>Menganalisis kasus pelanggaran hukum serta vandalisme fasilitas publik menggunakan Pasal 28 dan Pasal 28J UUD NRI Tahun 1945.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: MATERI 12 SLIDE -->
+    <div id="modal-materi" class="hidden absolute inset-0 z-50 bg-slate-950/90 backdrop-blur-md flex items-center justify-center p-3 sm:p-5 pt-14">
+        <div class="glass-panel w-[94%] h-[85%] rounded-3xl flex flex-col overflow-hidden shadow-2xl">
+            <div class="px-5 py-3 bg-slate-900/95 border-b border-amber-400/30 flex items-center justify-between shrink-0">
+                <div class="flex items-center gap-3">
+                    <span id="materi-slide-badge" class="px-3 py-1 rounded-xl bg-amber-400 text-slate-950 font-black text-xs sm:text-sm">Slide 1 / 12</span>
+                    <h3 id="materi-slide-title" class="text-sm sm:text-lg font-extrabold text-white truncate">Judul Slide Materi</h3>
+                </div>
+                <button onclick="closeModal('modal-materi')" class="w-9 h-9 rounded-xl bg-slate-800 hover:bg-rose-600 text-white flex items-center justify-center transition">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div id="materi-slide-body" class="p-4 sm:p-6 overflow-y-auto custom-scroll flex-1 text-slate-100"></div>
+
+            <div class="px-5 py-3 bg-slate-900/95 border-t border-slate-800 flex items-center justify-between shrink-0">
+                <button id="btn-materi-prev" onclick="changeMateriSlide(-1)" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs sm:text-sm flex items-center gap-2 transition">
+                    <i class="fa-solid fa-arrow-left"></i> Sebelumnya
+                </button>
+                <div id="materi-dots" class="hidden sm:flex items-center gap-1.5"></div>
+                <button id="btn-materi-next" onclick="changeMateriSlide(1)" class="px-5 py-2 rounded-xl bg-gradient-to-r from-amber-400 to-orange-500 hover:from-amber-300 hover:to-orange-400 text-slate-950 font-extrabold text-xs sm:text-sm flex items-center gap-2 transition shadow-lg">
+                    <span>Selanjutnya</span> <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: PROFIL PENGEMBANG -->
+    <div id="modal-profil" class="hidden absolute inset-0 z-50 bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-5 pt-14">
+        <div class="glass-panel w-[92%] h-[84%] rounded-3xl flex flex-col overflow-hidden shadow-2xl">
+            <div class="px-5 py-3.5 bg-slate-900/90 border-b border-purple-400/30 flex items-center justify-between shrink-0">
+                <h3 class="text-base sm:text-xl font-extrabold text-purple-300 flex items-center gap-2.5">
+                    <i class="fa-solid fa-user-tie"></i> Profil Pengembang Media Pembelajaran
+                </h3>
+                <button onclick="closeModal('modal-profil')" class="w-9 h-9 rounded-xl bg-slate-800 hover:bg-rose-600 text-white flex items-center justify-center transition">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="p-5 sm:p-6 overflow-y-auto custom-scroll flex-1 flex flex-col sm:flex-row items-center justify-center gap-6 text-slate-200">
+                <!-- 4:5 Portrait Frame with custom image support & local file uploader -->
+                <div class="flex flex-col items-center gap-2">
+                    <div onclick="document.getElementById('dev-photo-input').click()" title="Klik untuk memilih file posedepan.jpg dari perangkat Anda" class="w-36 h-44 sm:w-48 sm:h-60 rounded-2xl bg-gradient-to-b from-slate-800 to-slate-950 border-2 border-amber-400/60 shadow-xl overflow-hidden flex items-center justify-center relative group cursor-pointer">
+                        <img id="dev-profile-img"
+                             src="assets/images/posedepan.jpg"
+                             alt="Foto Pengembang"
+                             class="w-full h-full object-cover object-top"
+                             onload="this.classList.remove('hidden'); const fb = document.getElementById('dev-profile-fallback'); if(fb){ fb.classList.add('hidden'); fb.classList.remove('flex'); }"
+                             onerror="window.handleProfileImgFallback(this)">
+                        <div id="dev-profile-fallback" class="hidden flex-col items-center justify-center text-center p-4">
+                            <i class="fa-solid fa-user-tie text-5xl text-amber-400 mb-2"></i>
+                        </div>
+                        <div class="absolute inset-0 bg-slate-950/70 opacity-0 group-hover:opacity-100 transition flex flex-col items-center justify-center p-2 text-center pointer-events-none">
+                            <i class="fa-solid fa-camera text-amber-400 text-2xl mb-1"></i>
+                            <span class="text-[11px] font-extrabold text-white">Klik untuk Muat Foto (posedepan.jpg)</span>
+                        </div>
+                    </div>
+                    <input type="file" id="dev-photo-input" accept="image/*" class="hidden" onchange="window.loadCustomDeveloperPhoto(event)">
+                </div>
+
+                <div class="space-y-2.5 text-xs sm:text-base w-full max-w-xl">
+                    <div class="bg-slate-900/80 border border-amber-400/40 p-3 rounded-xl">
+                        <div class="text-xs text-amber-300 font-bold uppercase">Nama Pengembang</div>
+                        <div class="font-extrabold text-white text-sm sm:text-lg">Anggi Perdana, S.Pd., Gr.</div>
+                    </div>
+                    <div class="bg-slate-900/80 border border-slate-700 p-3 rounded-xl">
+                        <div class="text-xs text-purple-300 font-bold uppercase">Bidang Studi &amp; Sasaran</div>
+                        <div class="font-bold text-white">Pendidikan Pancasila (Fase F Kelas XII)</div>
+                    </div>
+                    <div class="bg-slate-900/80 border border-slate-700 p-3 rounded-xl">
+                        <div class="text-xs text-purple-300 font-bold uppercase">Instansi</div>
+                        <div class="font-bold text-white">SMAN 1 Bintan Pesisir</div>
+                    </div>
+                    <div class="bg-slate-900/80 border border-slate-700 p-3 rounded-xl">
+                        <div class="text-xs text-purple-300 font-bold uppercase">Kab/Provinsi</div>
+                        <div class="font-bold text-white">Kabupaten Bintan Provinsi Kepulauan Riau</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: REFERENSI -->
+    <div id="modal-referensi" class="hidden absolute inset-0 z-50 bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-5 pt-14">
+        <div class="glass-panel w-[92%] h-[84%] rounded-3xl flex flex-col overflow-hidden shadow-2xl">
+            <div class="px-5 py-3.5 bg-slate-900/90 border-b border-rose-400/30 flex items-center justify-between shrink-0">
+                <h3 class="text-base sm:text-xl font-extrabold text-rose-300 flex items-center gap-2.5">
+                    <i class="fa-solid fa-landmark"></i> Daftar Pustaka &amp; Referensi Materi
+                </h3>
+                <button onclick="closeModal('modal-referensi')" class="w-9 h-9 rounded-xl bg-slate-800 hover:bg-rose-600 text-white flex items-center justify-center transition">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="p-5 sm:p-6 overflow-y-auto custom-scroll flex-1 space-y-3 text-slate-200 text-xs sm:text-base">
+                <div class="bg-slate-900/80 border border-slate-700 p-4 rounded-2xl">
+                    <div class="font-extrabold text-amber-300 mb-1">1. Buku Teks Utama Kurikulum Merdeka</div>
+                    <p>Rohayani, Ida, dkk. (2023). <em>Pendidikan Pancasila untuk SMA/MA/SMK/MAK Kelas XII</em>. Jakarta: Kementerian Pendidikan, Kebudayaan, Riset, dan Teknologi Republik Indonesia.</p>
+                </div>
+                <div class="bg-slate-900/80 border border-slate-700 p-4 rounded-2xl">
+                    <div class="font-extrabold text-emerald-300 mb-1">2. Konstitusi &amp; Peraturan Perundang-undangan</div>
+                    <p>Undang-Undang Dasar Negara Republik Indonesia Tahun 1945 (Pasal 1 Ayat (3), Pasal 26–34, serta Pasal 28A–28J tentang Hak Asasi Manusia dan Kewajiban Dasar).</p>
+                </div>
+                <div class="bg-slate-900/80 border border-slate-700 p-4 rounded-2xl">
+                    <div class="font-extrabold text-sky-300 mb-1">3. Artikel Studi Kasus Aktual</div>
+                    <p>Kompas Metropolitan / Antara News (Maret 2026). <em>"18 Halte Bus Listrik Pintar (Smart Shelter) &amp; JPO Rusak Akibat Aksi Anarkis, Kerugian Capai Rp42 Miliar"</em>.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: CHARACTER CUSTOMIZATION BEFORE ENTERING 3D WORLD -->
+    <div id="modal-customization" class="hidden absolute inset-0 z-50 bg-slate-950/90 backdrop-blur-md flex items-center justify-center p-3 sm:p-5 pt-14">
+        <div class="glass-panel w-[92%] max-w-3xl h-[84%] rounded-3xl flex flex-col overflow-hidden shadow-2xl">
+            <div class="px-5 py-3 bg-slate-900/95 border-b border-amber-400/35 flex items-center justify-between shrink-0">
+                <h3 class="text-base sm:text-xl font-extrabold text-amber-300 flex items-center gap-2.5">
+                    <i class="fa-solid fa-user-astronaut"></i> Kustomisasi Karakter Garda Konstitusi
+                </h3>
+                <button onclick="closeModal('modal-customization')" class="w-9 h-9 rounded-xl bg-slate-800 hover:bg-rose-600 text-white flex items-center justify-center transition">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="p-4 sm:p-6 overflow-y-auto custom-scroll flex-1 space-y-4 text-slate-100 text-xs sm:text-sm">
+                <!-- Player Name -->
+                <div>
+                    <label class="block font-extrabold text-amber-300 mb-1.5">1. Nama Panggilan Karakter (Tampil di Atas Kepala 3D):</label>
+                    <input id="input-player-name" type="text" maxlength="16" value="Duta Pancasila" placeholder="Masukkan nama panggilan..." class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-amber-400/40 text-white font-bold focus:outline-none focus:border-amber-400">
+                </div>
+
+                <!-- Character Gender / Hair & Head Accessory (Only Putra & Putri) -->
+                <div>
+                    <label class="block font-extrabold text-sky-300 mb-1.5">2. Pilih Karakter &amp; Aksesoris Kepala:</label>
+                    <div class="grid grid-cols-2 gap-3">
+                        <button type="button" id="char-opt-putra" onclick="selectCharacterGender('putra')" class="p-3 rounded-2xl border-2 border-amber-400 bg-amber-500/15 text-left transition flex items-center gap-3">
+                            <div class="w-11 h-11 rounded-xl bg-sky-500/20 border border-sky-400 flex items-center justify-center text-sky-300 text-xl shrink-0">
+                                <i class="fa-solid fa-person"></i>
+                            </div>
+                            <div>
+                                <div class="font-extrabold text-white">Putra</div>
+                                <div class="text-[11px] text-slate-300">Rambut pendek rapi + Topi Sekolah &amp; Tas Ransel</div>
+                            </div>
+                        </button>
+                        <button type="button" id="char-opt-putri" onclick="selectCharacterGender('putri')" class="p-3 rounded-2xl border-2 border-slate-700 bg-slate-900/80 text-left transition flex items-center gap-3">
+                            <div class="w-11 h-11 rounded-xl bg-pink-500/20 border border-pink-400 flex items-center justify-center text-pink-300 text-xl shrink-0">
+                                <i class="fa-solid fa-person-dress"></i>
+                            </div>
+                            <div>
+                                <div class="font-extrabold text-white">Putri</div>
+                                <div class="text-[11px] text-slate-300">Rambut panjang terurai + Bando Pita Emas &amp; Tas Ransel</div>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Outfit Selection -->
+                <div>
+                    <label class="block font-extrabold text-emerald-300 mb-1.5">3. Pilih Pakaian &amp; Atribut:</label>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                        <button type="button" id="outfit-opt-sma" onclick="selectCharacterOutfit('sma')" class="p-2.5 rounded-xl border-2 border-amber-400 bg-amber-500/15 text-center transition">
+                            <div class="font-extrabold text-white text-xs">Seragam SMA</div>
+                            <div class="text-[10px] text-slate-300 mt-0.5">Putih Abu + Dasi Depan &amp; Badge OSIS</div>
+                        </button>
+                        <button type="button" id="outfit-opt-batik" onclick="selectCharacterOutfit('batik')" class="p-2.5 rounded-xl border-2 border-slate-700 bg-slate-900/80 text-center transition">
+                            <div class="font-extrabold text-amber-300 text-xs">Batik Konstitusi</div>
+                            <div class="text-[10px] text-slate-300 mt-0.5">Motif Batik Kawung Emas + Pin Garuda</div>
+                        </button>
+                        <button type="button" id="outfit-opt-garuda" onclick="selectCharacterOutfit('garuda')" class="p-2.5 rounded-xl border-2 border-slate-700 bg-slate-900/80 text-center transition">
+                            <div class="font-extrabold text-rose-300 text-xs">Jaket Garuda</div>
+                            <div class="text-[10px] text-slate-300 mt-0.5">Jaket Merah Putih + Perisai Dada</div>
+                        </button>
+                        <button type="button" id="outfit-opt-rompi" onclick="selectCharacterOutfit('rompi')" class="p-2.5 rounded-xl border-2 border-slate-700 bg-slate-900/80 text-center transition">
+                            <div class="font-extrabold text-sky-300 text-xs">Rompi Bela Negara</div>
+                            <div class="text-[10px] text-slate-300 mt-0.5">Rompi Taktis + Kantong Saku 3D</div>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="px-5 py-3 bg-slate-900/95 border-t border-slate-800 flex justify-end">
+                <button onclick="confirmCustomizationAndStart3D()" class="px-6 py-2.5 rounded-xl bg-gradient-to-r from-emerald-400 to-teal-500 hover:from-emerald-300 hover:to-teal-400 text-slate-950 font-black text-xs sm:text-sm flex items-center gap-2 shadow-lg">
+                    <i class="fa-solid fa-play"></i> Masuk ke Zona Petualangan
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: NPC DIALOGUE / INTERACTIVE QUIZ -->
+    <div id="modal-quiz-dialog" class="hidden absolute inset-0 z-50 bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-5 pt-14">
+        <div class="glass-panel w-[94%] max-w-4xl h-[85%] rounded-3xl flex flex-col overflow-hidden shadow-2xl">
+            <div class="px-5 py-3 bg-slate-900/95 border-b border-amber-400/35 flex items-center justify-between shrink-0">
+                <div class="flex items-center gap-2.5">
+                    <span id="dialog-badge" class="px-3 py-1 rounded-xl bg-amber-400 text-slate-950 font-black text-xs">KOTAK 1</span>
+                    <h3 id="dialog-title" class="text-sm sm:text-lg font-extrabold text-white truncate">Misi Konstitusi</h3>
+                </div>
+                <button onclick="closeModal('modal-quiz-dialog')" class="w-9 h-9 rounded-xl bg-slate-800 hover:bg-rose-600 text-white flex items-center justify-center transition">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div id="dialog-content-body" class="p-4 sm:p-6 overflow-y-auto custom-scroll flex-1 text-slate-100 text-xs sm:text-sm space-y-4"></div>
+        </div>
+    </div>
+
+    <!-- MODAL: APPRECIATION / CERTIFICATE -->
+    <div id="modal-appreciation" class="hidden absolute inset-0 z-50 bg-slate-950/90 backdrop-blur-md flex items-center justify-center p-3 sm:p-5 pt-14">
+        <div class="glass-panel w-[90%] max-w-2xl rounded-3xl p-6 text-center space-y-4 border-2 border-amber-400 shadow-2xl">
+            <div class="w-16 h-16 rounded-2xl bg-amber-400/20 border-2 border-amber-400 mx-auto flex items-center justify-center text-amber-300 text-3xl">
+                <i class="fa-solid fa-crown"></i>
+            </div>
+            <h3 class="text-xl sm:text-3xl font-black gold-gradient-text uppercase">Ketuntasan Belajar Tercapai!</h3>
+            <p id="appreciation-summary" class="text-xs sm:text-base text-slate-200 leading-relaxed"></p>
+            <div class="flex items-center justify-center gap-3 pt-2">
+                <button onclick="closeModal('modal-appreciation')" class="px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs sm:text-sm">Lanjut Jelajah</button>
+                <button onclick="closeModal('modal-appreciation'); exitGameToCover();" class="px-6 py-2.5 rounded-xl bg-gradient-to-r from-amber-400 to-orange-500 text-slate-950 font-black text-xs sm:text-sm">Kembali ke Halaman Utama</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    // =========================================================================
+    // 1. DATA 12 SLIDE MATERI FASE F KELAS XII BAB 3 SUBBAB A
+    // =========================================================================
+    let currentMateriIndex = 0;
+    let isMateriCompleted = false;
+
+    const materiSlides = [
+        {
+            title: "Peta Konsep & Pengantar Kesadaran Hukum",
+            badge: "Pengantar Bab 3 • Subbab A",
+            html: `
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-stretch">
+                    <div class="md:col-span-7 bg-slate-900/90 border border-amber-400/40 rounded-2xl p-4 sm:p-5 space-y-3">
+                        <span class="px-3 py-1 rounded-full bg-amber-500/20 text-amber-300 font-extrabold text-xs uppercase">Konsep Kunci Konstitusi</span>
+                        <h4 class="text-base sm:text-xl font-black text-white">Mengapa Kesadaran Hukum Berdasarkan UUD NRI Tahun 1945 Penting?</h4>
+                        <p class="text-xs sm:text-sm text-slate-200 leading-relaxed">
+                            Sebagai warga negara Indonesia, setiap tindakan kita dinaungi oleh hukum dasar tertulis tertinggi yaitu <strong>Undang-Undang Dasar Negara Republik Indonesia Tahun 1945 (UUD NRI Tahun 1945)</strong>. Kesadaran hukum bukan sekadar takut pada sanksi, melainkan kesadaran tulus bahwa aturan dibuat demi keadilan, ketertiban, dan kesejahteraan bersama.
+                        </p>
+                        <div class="grid grid-cols-2 gap-2.5 pt-1 text-xs">
+                            <div class="p-3 rounded-xl bg-slate-950/80 border border-sky-400/30">
+                                <div class="font-extrabold text-sky-300">Negara Hukum</div>
+                                <div class="text-slate-300 mt-0.5">Pasal 1 Ayat (3): Negara Indonesia adalah negara hukum.</div>
+                            </div>
+                            <div class="p-3 rounded-xl bg-slate-950/80 border border-emerald-400/30">
+                                <div class="font-extrabold text-emerald-300">Kedaulatan Rakyat</div>
+                                <div class="text-slate-300 mt-0.5">Pasal 1 Ayat (2): Kedaulatan dilaksanakan menurut Undang-Undang Dasar.</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="md:col-span-5 bg-slate-900/90 border border-sky-400/40 rounded-2xl p-4 sm:p-5 flex flex-col justify-between space-y-3">
+                        <div class="font-extrabold text-amber-300 text-sm sm:text-base flex items-center gap-2">
+                            <i class="fa-solid fa-sitemap"></i> Alur Fokus Subbab A
+                        </div>
+                        <ul class="space-y-2 text-xs sm:text-sm text-slate-200">
+                            <li class="p-2.5 rounded-xl bg-slate-950/80 border border-slate-800">1. Kedudukan UUD NRI Tahun 1945 &amp; Hierarki Regulasi</li>
+                            <li class="p-2.5 rounded-xl bg-slate-950/80 border border-slate-800">2. Hak &amp; Kewajiban Warga Negara (Pasal 26–34)</li>
+                            <li class="p-2.5 rounded-xl bg-slate-950/80 border border-slate-800">3. Indikator &amp; Contoh Perilaku Berkesadaran Hukum</li>
+                            <li class="p-2.5 rounded-xl bg-slate-950/80 border border-slate-800">4. Studi Kasus Aktual (Pasal 28 &amp; Pasal 28J)</li>
+                        </ul>
+                    </div>
+                </div>
+            `
+        },
+        {
+            title: "Kedudukan UUD NRI Tahun 1945 dalam Sistem Hukum Nasional",
+            badge: "Fondasi Konstitusi",
+            html: `
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs sm:text-sm">
+                    <div class="bg-slate-900/90 border border-amber-400/40 rounded-2xl p-4 sm:p-5 space-y-2.5">
+                        <div class="font-extrabold text-amber-300 text-sm sm:text-base">Hukum Dasar Tertulis Tertinggi</div>
+                        <p class="leading-relaxed text-slate-200">
+                            UUD NRI Tahun 1945 menempati puncak hierarki peraturan perundang-undangan di Indonesia (sesuai UU No. 12 Tahun 2011 jo. UU No. 13 Tahun 2022). Artinya, seluruh undang-undang, peraturan pemerintah, hingga peraturan daerah <strong>tidak boleh bertentangan</strong> dengan nilai-nilai Pancasila dan pasal-pasal dalam UUD NRI Tahun 1945.
+                        </p>
+                    </div>
+                    <div class="bg-slate-900/90 border border-emerald-400/40 rounded-2xl p-4 sm:p-5 space-y-2.5">
+                        <div class="font-extrabold text-emerald-300 text-sm sm:text-base">Fungsi Konstitusi Bagi Warga Negara</div>
+                        <ul class="list-disc pl-5 space-y-1.5 text-slate-200 leading-relaxed">
+                            <li><strong>Penjamin Hak Konstitusional:</strong> Melindungi hak asasi dan hak warga negara dari kesewenang-wenangan.</li>
+                            <li><strong>Pedoman Kewajiban:</strong> Mengatur batas dan tanggung jawab warga negara dalam kehidupan bersama.</li>
+                            <li><strong>Alat Kontrol Sosial:</strong> Menjadi tolok ukur apakah perilaku masyarakat dan penyelenggara negara sudah taat hukum.</li>
+                        </ul>
+                    </div>
+                </div>
+            `
+        },
+        {
+            title: "Kesamaan Kedudukan & Kewajiban Menjunjung Hukum (Pasal 27)",
+            badge: "Pasal 26 & Pasal 27",
+            html: `
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-3.5 text-xs sm:text-sm">
+                    <div class="bg-slate-900/90 border border-sky-400/40 rounded-2xl p-4 space-y-2">
+                        <span class="px-2.5 py-0.5 rounded-lg bg-sky-500/20 text-sky-300 font-bold text-xs">Pasal 27 Ayat (1)</span>
+                        <h5 class="font-extrabold text-white">Equality Before the Law</h5>
+                        <p class="text-slate-200 leading-relaxed">Segala warga negara bersamaan kedudukannya di dalam hukum dan pemerintahan dan wajib menjunjung hukum dan pemerintahan itu dengan tidak ada kecualinya.</p>
+                    </div>
+                    <div class="bg-slate-900/90 border border-amber-400/40 rounded-2xl p-4 space-y-2">
+                        <span class="px-2.5 py-0.5 rounded-lg bg-amber-500/20 text-amber-300 font-bold text-xs">Pasal 27 Ayat (2)</span>
+                        <h5 class="font-extrabold text-white">Pekerjaan &amp; Penghidupan Layak</h5>
+                        <p class="text-slate-200 leading-relaxed">Tiap-tiap warga negara berhak atas pekerjaan dan penghidupan yang layak bagi kemanusiaan.</p>
+                    </div>
+                    <div class="bg-slate-900/90 border border-emerald-400/40 rounded-2xl p-4 space-y-2">
+                        <span class="px-2.5 py-0.5 rounded-lg bg-emerald-500/20 text-emerald-300 font-bold text-xs">Pasal 27 Ayat (3)</span>
+                        <h5 class="font-extrabold text-white">Upaya Pembelaan Negara</h5>
+                        <p class="text-slate-200 leading-relaxed">Setiap warga negara berhak dan wajib ikut serta dalam upaya pembelaan negara, termasuk melalui kepatuhan hukum dan disiplin belajar.</p>
+                    </div>
+                </div>
+            `
+        },
+        {
+            title: "Kemerdekaan Berserikat, Berpendapat, & HAM (Pasal 28 & 28A–28J)",
+            badge: "Pasal 28 & Pasal 28J",
+            html: `
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs sm:text-sm">
+                    <div class="bg-slate-900/90 border border-amber-400/40 rounded-2xl p-4 space-y-2">
+                        <div class="font-extrabold text-amber-300 text-sm sm:text-base">Pasal 28 &amp; Pasal 28E Ayat (3)</div>
+                        <p class="text-slate-200 leading-relaxed">
+                            Kemerdekaan berserikat dan berkumpul, mengeluarkan pikiran dengan lisan dan tulisan dan sebagainya ditetapkan dengan undang-undang. Kebebasan menyampaikan pendapat di muka umum harus dilakukan secara <strong>damai, tertib, dan bertanggung jawab</strong>.
+                        </p>
+                    </div>
+                    <div class="bg-slate-900/90 border border-rose-400/40 rounded-2xl p-4 space-y-2">
+                        <div class="font-extrabold text-rose-300 text-sm sm:text-base">Pasal 28J Ayat (1) &amp; Ayat (2) — Batas Konstitusional</div>
+                        <p class="text-slate-200 leading-relaxed">
+                            Setiap orang wajib menghormati hak asasi manusia orang lain dalam tertib kehidupan bermasyarakat, berbangsa, dan bernegara. Dalam menjalankan hak dan kebebasannya, setiap orang wajib tunduk kepada pembatasan yang ditetapkan dengan undang-undang demi ketertiban umum.
+                        </p>
+                    </div>
+                </div>
+            `
+        },
+        {
+            title: "Kemerdekaan Beragama & Pertahanan Keamanan (Pasal 29 & 30)",
+            badge: "Pasal 29 & Pasal 30",
+            html: `
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs sm:text-sm">
+                    <div class="bg-slate-900/90 border border-purple-400/40 rounded-2xl p-4 space-y-2">
+                        <span class="px-2.5 py-0.5 rounded-lg bg-purple-500/20 text-purple-300 font-bold text-xs">Pasal 29 Ayat (1) &amp; (2)</span>
+                        <h5 class="font-extrabold text-white text-sm sm:text-base">Ketuhanan &amp; Toleransi Beragama</h5>
+                        <p class="text-slate-200 leading-relaxed">Negara berdasar atas Ketuhanan Yang Maha Esa dan menjamin kemerdekaan tiap-tiap penduduk untuk memeluk agamanya masing-masing dan untuk beribadat menurut agamanya dan kepercayaannya itu.</p>
+                    </div>
+                    <div class="bg-slate-900/90 border border-sky-400/40 rounded-2xl p-4 space-y-2">
+                        <span class="px-2.5 py-0.5 rounded-lg bg-sky-500/20 text-sky-300 font-bold text-xs">Pasal 30 Ayat (1) &amp; (2)</span>
+                        <h5 class="font-extrabold text-white text-sm sm:text-base">Pertahanan &amp; Keamanan Negara (Sishankamrata)</h5>
+                        <p class="text-slate-200 leading-relaxed">Tiap-tiap warga negara berhak dan wajib ikut serta dalam usaha pertahanan dan keamanan negara. TNI dan Polri sebagai kekuatan utama, sedangkan rakyat sebagai kekuatan pendukung.</p>
+                    </div>
+                </div>
+            `
+        },
+        {
+            title: "Hak Pendidikan, Kebudayaan, Ekonomi & Kesejahteraan (Pasal 31–34)",
+            badge: "Pasal 31 s.d. Pasal 34",
+            html: `
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs sm:text-sm">
+                    <div class="bg-slate-900/90 border border-amber-400/40 rounded-2xl p-3.5">
+                        <div class="font-extrabold text-amber-300">Pasal 31 — Pendidikan Nasional</div>
+                        <p class="text-slate-200 mt-1">Setiap warga negara berhak mendapat pendidikan dan wajib mengikuti pendidikan dasar dan pemerintah wajib membiayainya (minimal 20% APBN/APBD).</p>
+                    </div>
+                    <div class="bg-slate-900/90 border border-emerald-400/40 rounded-2xl p-3.5">
+                        <div class="font-extrabold text-emerald-300">Pasal 32 — Kebudayaan Nasional &amp; Bahasa Daerah</div>
+                        <p class="text-slate-200 mt-1">Negara memajukan kebudayaan nasional Indonesia di tengah peradaban dunia serta menghormati dan memelihara bahasa daerah sebagai kekayaan budaya nasional.</p>
+                    </div>
+                    <div class="bg-slate-900/90 border border-sky-400/40 rounded-2xl p-3.5">
+                        <div class="font-extrabold text-sky-300">Pasal 33 — Perekonomian Nasional</div>
+                        <p class="text-slate-200 mt-1">Perekonomian disusun sebagai usaha bersama berdasar atas asas kekeluargaan. Bumi, air, dan kekayaan alam dikuasai negara untuk kemakmuran rakyat.</p>
+                    </div>
+                    <div class="bg-slate-900/90 border border-rose-400/40 rounded-2xl p-3.5">
+                        <div class="font-extrabold text-rose-300">Pasal 34 — Kesejahteraan &amp; Fasilitas Umum</div>
+                        <p class="text-slate-200 mt-1">Fakir miskin dan anak terlantar dipelihara oleh negara. Negara bertanggung jawab atas penyediaan fasilitas pelayanan kesehatan dan fasilitas pelayanan umum yang layak.</p>
+                    </div>
+                </div>
+            `
+        },
+        {
+            title: "4 Indikator Kesadaran Hukum Menurut Soerjono Soekanto",
+            badge: "Teori Kesadaran Hukum",
+            html: `
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5 text-xs sm:text-sm">
+                    <div class="bg-slate-900/90 border border-amber-400/40 rounded-2xl p-4">
+                        <div class="font-black text-amber-300">1. Pengetahuan Hukum (Law Awareness)</div>
+                        <p class="text-slate-200 mt-1">Seseorang mengetahui bahwa perilaku tertentu telah diatur oleh hukum tertulis maupun tidak tertulis.</p>
+                    </div>
+                    <div class="bg-slate-900/90 border border-sky-400/40 rounded-2xl p-4">
+                        <div class="font-black text-sky-300">2. Pemahaman Hukum (Law Acquaintance)</div>
+                        <p class="text-slate-200 mt-1">Memahami isi, tujuan, dan manfaat dari suatu aturan hukum bagi ketertiban bersama.</p>
+                    </div>
+                    <div class="bg-slate-900/90 border border-emerald-400/40 rounded-2xl p-4">
+                        <div class="font-black text-emerald-300">3. Sikap Hukum (Legal Attitude)</div>
+                        <p class="text-slate-200 mt-1">Kecenderungan untuk menerima dan menghargai hukum karena dirasakan adil dan bermanfaat.</p>
+                    </div>
+                    <div class="bg-slate-900/90 border border-purple-400/40 rounded-2xl p-4">
+                        <div class="font-black text-purple-300">4. Pola Perilaku Hukum (Legal Behavior)</div>
+                        <p class="text-slate-200 mt-1">Tingkat tertinggi di mana warga negara secara nyata berperilaku sesuai aturan hukum dalam keseharian.</p>
+                    </div>
+                </div>
+            `
+        },
+        {
+            title: "Perilaku Taat Hukum di Lingkungan Keluarga & Sekolah",
+            badge: "Implementasi Nyata (1)",
+            html: `
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs sm:text-sm">
+                    <div class="bg-slate-900/90 border border-amber-400/40 rounded-2xl p-4 space-y-2">
+                        <div class="font-extrabold text-amber-300 text-sm sm:text-base"><i class="fa-solid fa-house-user mr-1.5"></i> Lingkungan Keluarga</div>
+                        <ul class="list-disc pl-5 space-y-1.5 text-slate-200">
+                            <li>Menghormati hak dan pendapat seluruh anggota keluarga tanpa kekerasan (UU PKDRT).</li>
+                            <li>Mematuhi aturan jam belajar dan kesepakatan bersama di rumah.</li>
+                            <li>Menjaga nama baik keluarga dan administrasi kependudukan (Kartu Keluarga, KTP-el).</li>
+                        </ul>
+                    </div>
+                    <div class="bg-slate-900/90 border border-emerald-400/40 rounded-2xl p-4 space-y-2">
+                        <div class="font-extrabold text-emerald-300 text-sm sm:text-base"><i class="fa-solid fa-school mr-1.5"></i> Lingkungan Sekolah</div>
+                        <ul class="list-disc pl-5 space-y-1.5 text-slate-200">
+                            <li>Mematuhi tata tertib sekolah, hadir tepat waktu, dan mengenakan atribut lengkap.</li>
+                            <li>Menolak segala bentuk perundungan (<em>bullying</em>), tawuran, dan kecurangan akademik.</li>
+                            <li>Merawat fasilitas belajar di kelas, laboratorium, dan perpustakaan sekolah.</li>
+                        </ul>
+                    </div>
+                </div>
+            `
+        },
+        {
+            title: "Perilaku Taat Hukum di Masyarakat, Bangsa, & Negara",
+            badge: "Implementasi Nyata (2)",
+            html: `
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs sm:text-sm">
+                    <div class="bg-slate-900/90 border border-sky-400/40 rounded-2xl p-4 space-y-2">
+                        <div class="font-extrabold text-sky-300 text-sm sm:text-base"><i class="fa-solid fa-people-Roof mr-1.5"></i> Lingkungan Masyarakat</div>
+                        <ul class="list-disc pl-5 space-y-1.5 text-slate-200">
+                            <li>Menjaga ketertiban lingkungan, ikut siskamling, dan tidak melakukan main hakim sendiri (<em>eigenrichting</em>).</li>
+                            <li>Mematuhi norma kesopanan, adat istiadat lokal, serta menjaga fasilitas publik di lingkungan sekitar.</li>
+                        </ul>
+                    </div>
+                    <div class="bg-slate-900/90 border border-rose-400/40 rounded-2xl p-4 space-y-2">
+                        <div class="font-extrabold text-rose-300 text-sm sm:text-base"><i class="fa-solid fa-flag mr-1.5"></i> Lingkungan Bangsa &amp; Negara</div>
+                        <ul class="list-disc pl-5 space-y-1.5 text-slate-200">
+                            <li>Memiliki SIM dan helm SNI saat berkendara sesuai UU No. 22 Tahun 2009 tentang LLAJ.</li>
+                            <li>Taat membayar pajak tepat waktu (Pasal 23A UUD NRI Tahun 1945) yang digunakan untuk membangun fasilitas umum.</li>
+                            <li>Bijak bermedia sosial dan tidak menyebarkan ujaran kebencian atau hoaks (UU ITE).</li>
+                        </ul>
+                    </div>
+                </div>
+            `
+        },
+        {
+            title: "Hubungan Pajak (Pasal 23A) & Fasilitas Umum (Pasal 34 Ayat 3)",
+            badge: "Kesadaran Fiskal & Publik",
+            html: `
+                <div class="bg-slate-900/90 border border-amber-400/40 rounded-2xl p-4 sm:p-5 space-y-3 text-xs sm:text-sm">
+                    <h4 class="font-extrabold text-amber-300 text-sm sm:text-lg">Mengapa Merusak Fasilitas Umum Berarti Merugikan Diri Sendiri &amp; Rakyat?</h4>
+                    <p class="text-slate-200 leading-relaxed">
+                        Berdasarkan <strong>Pasal 23A UUD NRI Tahun 1945</strong>, pajak dan pungutan lain yang bersifat memaksa untuk keperluan negara diatur dengan undang-undang. Dana pajak yang dikumpulkan dari keringat rakyat tersebut diwujudkan kembali oleh negara menjadi sekolah negeri, rumah sakit, jembatan penyeberangan orang (JPO), dan halte transportasi publik sesuai amanat <strong>Pasal 34 Ayat (3)</strong>.
+                    </p>
+                    <div class="p-3.5 rounded-xl bg-rose-950/70 border border-rose-400/40 text-rose-200">
+                        <strong>Kesimpulan Kritis:</strong> Tindakan vandalisme atau membakar halte dan fasilitas publik saat berdemonstrasi bukan hanya tindak pidana perusakan barang, tetapi juga merampas hak konstitusional warga negara lain untuk menikmati fasilitas pelayanan umum yang dibiayai dari uang rakyat.
+                    </div>
+                </div>
+            `
+        },
+        {
+            title: "Disiplin Berlalu Lintas & Etika Ruang Digital",
+            badge: "Hukum di Era Modern",
+            html: `
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs sm:text-sm">
+                    <div class="bg-slate-900/90 border border-emerald-400/40 rounded-2xl p-4 space-y-2">
+                        <div class="font-extrabold text-emerald-300 text-sm sm:text-base">Kepatuhan Lalu Lintas (UU No. 22 Tahun 2009)</div>
+                        <p class="text-slate-200 leading-relaxed">
+                            Berhenti di belakang garis marka saat lampu merah, tidak melawan arus, menggunakan helm SNI, dan mengutamakan keselamatan pejalan kaki di <em>zebra cross</em> merupakan wujud nyata penghormatan terhadap hak hidup orang lain (Pasal 28A).
+                        </p>
+                    </div>
+                    <div class="bg-slate-900/90 border border-sky-400/40 rounded-2xl p-4 space-y-2">
+                        <div class="font-extrabold text-sky-300 text-sm sm:text-base">Kepatuhan Hukum di Ruang Siber</div>
+                        <p class="text-slate-200 leading-relaxed">
+                            Ruang digital bukanlah ruang tanpa hukum. Menghindari fitnah, perundungan siber (<em>cyberbullying</em>), pelanggaran data pribadi, dan provokasi perusakan fasilitas umum adalah cerminan warga negara digital yang berkesadaran konstitusi.
+                        </p>
+                    </div>
+                </div>
+            `
+        },
+        {
+            title: "Studi Kasus Aktual 2026: Kerusakan Halte Bus Listrik & JPO",
+            badge: "Aktivitas Analisis Kasus • Slide Penutup",
+            html: `
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 text-xs sm:text-sm items-stretch">
+                    <div class="lg:col-span-7 bg-slate-950/95 border border-amber-400/50 rounded-2xl p-4 flex flex-col max-h-60 sm:max-h-64 overflow-y-auto custom-scroll space-y-2.5">
+                        <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+                            <span class="px-2.5 py-0.5 rounded bg-rose-500/20 text-rose-300 font-extrabold text-[11px]">BERITA UTUH • MARET 2026</span>
+                            <span class="text-[11px] text-slate-400">Gulir (Scroll) untuk membaca lengkap</span>
+                        </div>
+                        <h4 class="font-black text-amber-300 text-sm sm:text-base leading-snug">
+                            18 Halte Bus Listrik Pintar (Smart Shelter) &amp; JPO Rusak Akibat Aksi Anarkis, Kerugian Capai Rp42 Miliar
+                        </h4>
+                        <p class="text-slate-200 leading-relaxed">
+                            <strong>JAKARTA (2026)</strong> — Dinas Perhubungan bersama PT Transportasi Publik mencatat sedikitnya 18 halte bus listrik terintegrasi (<em>Smart Shelter</em>) dan 4 Jembatan Penyeberangan Orang (JPO) mengalami kerusakan parah akibat aksi vandalisme dan pembakaran oleh oknum tidak bertanggung jawab di sela-sela unjuk rasa pada pekan kedua Maret 2026.
+                        </p>
+                        <p class="text-slate-200 leading-relaxed">
+                            Panel surya atap halte, mesin tiket elektronik (<em>tap-in gate</em>), layar informasi ramah disabilitas, hingga lift JPO lansia hancur dan tidak dapat beroperasi. Total kerugian materiil diperkirakan mencapai <strong>Rp42 miliar</strong>.
+                        </p>
+                        <p class="text-slate-200 leading-relaxed">
+                            "Menyampaikan pendapat di muka umum adalah hak konstitusional yang dijamin Pasal 28 dan Pasal 28E ayat (3) UUD NRI Tahun 1945. Namun, merusak halte dan JPO yang dibangun dari pajak rakyat sangat merugikan ratusan ribu penumpang harian, pelajar, pekerja, dan penyandang disabilitas," tegas Kepala Dinas Perhubungan dalam keterangan resminya, Selasa (17/3/2026).
+                        </p>
+                        <div class="pt-2 border-t border-slate-800 text-[11px] text-sky-300 font-semibold">
+                            Sumber Berita: Disarikan dari Laporan Metropolitan Kompas.id &amp; Antara News, 17 Maret 2026 ("Vandalisme Fasilitas Publik Transportasi Terintegrasi 2026").
+                        </div>
+                    </div>
+                    <div class="lg:col-span-5 bg-slate-900/90 border border-emerald-400/40 rounded-2xl p-4 space-y-2.5 flex flex-col justify-between">
+                        <div>
+                            <div class="font-extrabold text-emerald-300 text-sm sm:text-base mb-1.5">Sintesis Konstitusional (Pasal 28 &amp; 28J)</div>
+                            <p class="text-slate-200 leading-relaxed text-xs">
+                                1. <strong>Pasal 28 &amp; 28E Ayat (3)</strong> menjamin kebebasan berpendapat, tetapi bukan kebebasan merusak.<br>
+                                2. <strong>Pasal 28J Ayat (1) &amp; (2)</strong> mewajibkan setiap orang menghormati HAM pengguna fasilitas publik dan tunduk pada pembatasan undang-undang (UU No. 9 Tahun 1998).
+                            </p>
+                        </div>
+                        <div class="p-3 rounded-xl bg-emerald-500/20 border border-emerald-400 text-emerald-200 text-xs font-bold">
+                            <i class="fa-solid fa-unlock-keyhole mr-1"></i> Anda telah mencapai Slide 12! Tombol MULAI PETUALANGAN di halaman depan kini telah terbuka!
+                        </div>
+                    </div>
+                </div>
+            `
+        }
+    ];
+
+    // =========================================================================
+    // 2. DATA 5 ZONA KEPULAUAN & 10 KOTAK MISI (5 VARIASI SOAL INTERAKTIF)
+    // =========================================================================
+    const zoneDefinitions = [
+        { id: 1, name: "Zona 1: Pulau Tropika Konstitusi", centerZ: 0,    groundColor: 0x16a34a, skyColor: 0x38bdf8, fogColor: 0x7dd3fc, keyPos: { x: -22, y: 4.5, z: 16 },   keyHint: "Bukit Umpak Barat Daya Zona 1" },
+        { id: 2, name: "Zona 2: Pulau Senja Identitas",    centerZ: -130, groundColor: 0xd97706, skyColor: 0xfb923c, fogColor: 0xfdba74, keyPos: { x: 0,   y: 3.2, z: -130 }, keyHint: "Altar Candi Tengah Zona 2" },
+        { id: 3, name: "Zona 3: Lembah Mendung Regulasi",  centerZ: -260, groundColor: 0x475569, skyColor: 0x64748b, fogColor: 0x94a3b8, keyPos: { x: 22,  y: 5.2, z: -276 }, keyHint: "Puncak Umpak Timur Laut Zona 3" },
+        { id: 4, name: "Zona 4: Puncak Salju Bela Negara", centerZ: -390, groundColor: 0xe2e8f0, skyColor: 0xbae6fd, fogColor: 0xe0f2fe, keyPos: { x: 0,   y: 3.2, z: -390 }, keyHint: "Altar Es Tengah Zona 4" },
+        { id: 5, name: "Zona 5: Benteng Badai & Petir",    centerZ: -520, groundColor: 0x334155, skyColor: 0x1e1b4b, fogColor: 0x312e81, keyPos: null,                        keyHint: "Mahkota Finish Utara" }
+    ];
+
+    const missionQuests = [
+        {
+            id: 1,
+            zone: 1,
+            npcName: "Somad",
+            npcGender: "male",
+            npcPos: { x: -10, z: 10 },
+            boxPos: { x: 22, y: 3.3, z: 14 },
+            npcGreeting: "Salam Konstitusi! Saya Somad. Lihatlah bukit berundak (umpak) di sebelah Tenggara pulau ini. Panjatlah umpak tersebut untuk membuka KOTAK 1!",
+            type: "pg",
+            question: "Berdasarkan Pasal 1 Ayat (3) dan Pasal 27 Ayat (1) UUD NRI Tahun 1945, Indonesia adalah negara hukum di mana setiap warga negara memiliki kedudukan yang sama di hadapan hukum. Wujud perilaku pelajar Kelas XII yang paling mencerminkan prinsip tersebut adalah...",
+            options: [
+                "A. Mematuhi tata tertib sekolah hanya ketika diawasi oleh guru piket",
+                "B. Meminta perlakuan khusus saat melanggar aturan lalu lintas karena kenal petugas",
+                "C. Mematuhi aturan sekolah dan hukum lalu lintas secara sadar tanpa memandang status sosial",
+                "D. Mengutamakan kepentingan kelompok pertemanan di atas peraturan sekolah",
+                "E. Menyerahkan seluruh urusan ketertiban sekolah kepada pengurus OSIS saja"
+            ],
+            correctIndex: 2,
+            answerKeyText: "C. Mematuhi aturan sekolah dan hukum lalu lintas secara sadar tanpa memandang status sosial",
+            explanation: "Pasal 27 Ayat (1) menegaskan prinsip Equality Before the Law (kesamaan kedudukan di dalam hukum dan pemerintahan tanpa kecuali). Kesadaran hukum sejati lahir dari kepatuhan internal tanpa membedakan jabatan atau status sosial."
+        },
+        {
+            id: 2,
+            zone: 1,
+            npcName: "Kiki",
+            npcGender: "female",
+            npcPos: { x: 10, z: -8 },
+            boxPos: { x: -22, y: 4.65, z: -16 },
+            npcGreeting: "Halo pejuang muda! Saya Kiki. KOTAK 2 berada di puncak umpak tertinggi di sebelah Barat Laut Pulau Tropika ini. Gunakan tombol LOMPAT untuk mendakinya!",
+            type: "tf",
+            question: "Tentukan apakah pernyataan mengenai kedudukan UUD NRI Tahun 1945 berikut BENAR atau SALAH!",
+            statements: [
+                { text: "UUD NRI Tahun 1945 merupakan hukum dasar tertulis tertinggi yang menjadi acuan seluruh peraturan di bawahnya.", correct: true },
+                { text: "Peraturan Daerah (Perda) boleh bertentangan dengan UUD NRI Tahun 1945 asalkan disetujui kepala daerah.", correct: false },
+                { text: "Kesadaran hukum tertinggi tercermin dalam pola perilaku nyata yang taat aturan meskipun tanpa pengawasan petugas.", correct: true }
+            ],
+            answerKeyText: "Pernyataan 1: BENAR | Pernyataan 2: SALAH | Pernyataan 3: BENAR",
+            explanation: "Dalam hierarki peraturan perundang-undangan (UU No. 12 Tahun 2011 jo. UU No. 13 Tahun 2022), UUD NRI Tahun 1945 adalah hukum dasar tertinggi sehingga Perda atau UU tidak boleh bertentangan dengannya."
+        },
+        {
+            id: 3,
+            zone: 2,
+            npcName: "Bima",
+            npcGender: "male",
+            npcPos: { x: -12, z: -120 },
+            boxPos: { x: 22, y: 4.65, z: -146 },
+            npcGreeting: "Selamat datang di Pulau Senja! Saya Bima. KOTAK 3 tersimpan di atas umpak sebelah Timur Laut dekat rumah adat Joglo. Pasangkan pasal konstitusi di sana!",
+            type: "match",
+            question: "Pasangkan Pasal UUD NRI Tahun 1945 di kolom kiri dengan substansi hak/kewajiban warga negara yang tepat di kolom kanan!",
+            pairs: [
+                { prompt: "Pasal 27 Ayat (3)", answer: "Hak dan kewajiban ikut serta dalam upaya pembelaan negara" },
+                { prompt: "Pasal 29 Ayat (2)", answer: "Jaminan kemerdekaan memeluk agama dan beribadat" },
+                { prompt: "Pasal 31 Ayat (1)", answer: "Hak setiap warga negara untuk mendapatkan pendidikan" }
+            ],
+            answerKeyText: "Pasal 27(3) = Bela Negara | Pasal 29(2) = Kemerdekaan Beragama | Pasal 31(1) = Hak Pendidikan",
+            explanation: "Pasal 27 Ayat (3) mengatur bela negara, Pasal 29 Ayat (2) menjamin kebebasan beragama dan beribadat, sedangkan Pasal 31 Ayat (1) menjamin hak memperoleh pendidikan."
+        },
+        {
+            id: 4,
+            zone: 2,
+            npcName: "Tari",
+            npcGender: "female",
+            npcPos: { x: 12, z: -136 },
+            boxPos: { x: -22, y: 3.3, z: -114 },
+            npcGreeting: "Salam hangat! Saya Tari. Pergilah ke arah Barat Daya Pulau Senja ini dan naiklah ke atas umpaknya untuk membuka KOTAK 4!",
+            type: "dropdown",
+            question: "Pilihlah jawaban yang paling tepat pada menu Drop Down berikut terkait pelaksanaan hak dan kewajiban warga negara!",
+            dropdowns: [
+                {
+                    label: "1. Kewajiban warga negara membayar pajak untuk membiayai pembangunan nasional diatur dalam...",
+                    options: ["Pilih Pasal...", "Pasal 23A UUD NRI Tahun 1945", "Pasal 26 Ayat (1) UUD NRI Tahun 1945", "Pasal 36A UUD NRI Tahun 1945"],
+                    correct: "Pasal 23A UUD NRI Tahun 1945"
+                },
+                {
+                    label: "2. Sikap menghormati bahasa daerah sekaligus menjunjung bahasa persatuan Bahasa Indonesia sesuai dengan amanat...",
+                    options: ["Pilih Pasal...", "Pasal 32 Ayat (2) & Pasal 36 UUD NRI Tahun 1945", "Pasal 28A UUD NRI Tahun 1945", "Pasal 30 Ayat (1) UUD NRI Tahun 1945"],
+                    correct: "Pasal 32 Ayat (2) & Pasal 36 UUD NRI Tahun 1945"
+                }
+            ],
+            answerKeyText: "1. Pasal 23A UUD NRI Tahun 1945 | 2. Pasal 32 Ayat (2) & Pasal 36 UUD NRI Tahun 1945",
+            explanation: "Pasal 23A mengatur pajak dan pungutan yang bersifat memaksa untuk keperluan negara, sementara Pasal 32 Ayat (2) dan Pasal 36 mengatur pemeliharaan bahasa daerah dan kedudukan Bahasa Indonesia."
+        },
+        {
+            id: 5,
+            zone: 3,
+            npcName: "Raka",
+            npcGender: "male",
+            npcPos: { x: -11, z: -250 },
+            boxPos: { x: 22, y: 3.3, z: -246 },
+            npcGreeting: "Halo! Saya Raka di Lembah Mendung Regulasi. Di antara gedung-gedung tinggi di sebelah Tenggara ada umpak batu tempat KOTAK 5 berada!",
+            type: "wordbank",
+            question: "Lengkapi kalimat konstitusi berikut dengan mengetuk kata yang tepat secara berurutan!",
+            sentenceTemplate: "Menurut Pasal 28J Ayat (1), setiap orang wajib menghormati [1] orang lain dalam tertib kehidupan bermasyarakat, serta menurut Ayat (2) wajib tunduk kepada [2] yang ditetapkan dengan [3].",
+            blanks: ["hak asasi manusia", "pembatasan", "undang-undang"],
+            wordBank: ["hak asasi manusia", "pembatasan", "undang-undang", "kebebasan mutlak"],
+            answerKeyText: "[1] hak asasi manusia | [2] pembatasan | [3] undang-undang",
+            explanation: "Pasal 28J Ayat (1) dan (2) menegaskan bahwa pelaksanaan HAM di Indonesia tidak bersifat mutlak tanpa batas, melainkan dibatasi oleh undang-undang dan kewajiban menghormati HAM orang lain."
+        },
+        {
+            id: 6,
+            zone: 3,
+            npcName: "Sari",
+            npcGender: "female",
+            npcPos: { x: 11, z: -268 },
+            boxPos: { x: -22, y: 4.65, z: -276 },
+            npcGreeting: "Saya Sari. Panjatlah umpak bertingkat di sisi Barat Laut kawasan gedung ini untuk menyelesaikan tantangan KOTAK 6!",
+            type: "match",
+            question: "Pasangkan tingkatan indikator kesadaran hukum (Soerjono Soekanto) dengan contoh perilaku nyatanya!",
+            pairs: [
+                { prompt: "Pengetahuan Hukum", answer: "Mengetahui adanya aturan wajib memiliki SIM dan memakai helm SNI" },
+                { prompt: "Pemahaman Hukum", answer: "Menyadari bahwa sabuk pengaman dan helm melindungi keselamatan jiwa" },
+                { prompt: "Pola Perilaku Hukum", answer: "Selalu memakai helm SNI dan mematuhi rambu meskipun tidak ada polisi" }
+            ],
+            answerKeyText: "Pengetahuan = Tahu aturan | Pemahaman = Paham tujuan aturan | Perilaku = Taat secara konsisten",
+            explanation: "Indikator kesadaran hukum meningkat mulai dari sekadar tahu aturan (pengetahuan), memahami tujuannya (pemahaman), bersikap positif (sikap), hingga konsisten melaksanakannya (pola perilaku hukum)."
+        },
+        {
+            id: 7,
+            zone: 4,
+            npcName: "Bayu",
+            npcGender: "male",
+            npcPos: { x: -12, z: -380 },
+            boxPos: { x: 22, y: 4.65, z: -406 },
+            npcGreeting: "Dingin sekali di Puncak Salju Bela Negara! Saya Bayu. Panjatlah bukit es di sebelah Timur Laut pulau ini untuk membuka KOTAK 7!",
+            type: "pg",
+            question: "Pasal 30 Ayat (1) dan (2) UUD NRI Tahun 1945 mengatur usaha pertahanan dan keamanan negara melalui Sistem Pertahanan dan Keamanan Rakyat Semesta (Sishankamrata). Peran peserta didik sebagai kekuatan pendukung keamanan dan ketertiban masyarakat dapat diwujudkan dengan cara...",
+            options: [
+                "A. Mengambil alih tugas kepolisian dalam melakukan penilangan di jalan raya",
+                "B. Mencegah tawuran antarpelajar, menolak narkoba, serta menjaga kerukunan di sekolah dan masyarakat",
+                "C. Membentuk kelompok razia mandiri tanpa koordinasi dengan aparat penegak hukum",
+                "D. Menyebarkan informasi yang belum terverifikasi di media sosial agar viral",
+                "E. Menghindari kegiatan ekstrakurikuler yang melatih kedisiplinan seperti Pramuka dan Paskibra"
+            ],
+            correctIndex: 1,
+            answerKeyText: "B. Mencegah tawuran antarpelajar, menolak narkoba, serta menjaga kerukunan di sekolah dan masyarakat",
+            explanation: "Dalam Sishankamrata, TNI dan Polri adalah kekuatan utama, sedangkan rakyat adalah kekuatan pendukung. Pelajar berperan aktif menjaga ketertiban dengan menolak tawuran, perundungan, dan narkoba."
+        },
+        {
+            id: 8,
+            zone: 4,
+            npcName: "Nisa",
+            npcGender: "female",
+            npcPos: { x: 12, z: -396 },
+            boxPos: { x: -22, y: 3.3, z: -374 },
+            npcGreeting: "Halo, saya Nisa! KOTAK 8 berada di atas bukit salju sebelah Barat Daya. Selesaikan kuisnya agar Kunci Emas Zona 4 muncul di Altar Es Tengah!",
+            type: "tf",
+            question: "Analisis kebenaran pernyataan terkait Pasal 33 dan Pasal 34 UUD NRI Tahun 1945 berikut ini!",
+            statements: [
+                { text: "Pasal 34 Ayat (3) menegaskan negara bertanggung jawab atas penyediaan fasilitas pelayanan kesehatan dan fasilitas pelayanan umum yang layak.", correct: true },
+                { text: "Merusak halte transportasi umum dan rambu jalan merupakan bentuk kebebasan berekspresi yang dilindungi konstitusi.", correct: false },
+                { text: "Menjaga keutuhan fasilitas publik di sekolah dan kota berarti ikut menjaga aset negara yang dibiayai dari pajak warga.", correct: true }
+            ],
+            answerKeyText: "Pernyataan 1: BENAR | Pernyataan 2: SALAH | Pernyataan 3: BENAR",
+            explanation: "Fasilitas pelayanan umum disediakan negara sesuai Pasal 34 Ayat (3) dari dana pajak rakyat (Pasal 23A). Merusaknya merupakan pelanggaran hukum pidana dan melanggar hak warga negara lain."
+        },
+        {
+            id: 9,
+            zone: 5,
+            npcName: "Dodi",
+            npcGender: "male",
+            npcPos: { x: -12, z: -510 },
+            boxPos: { x: 22, y: 3.3, z: -506 },
+            npcGreeting: "Selamat tiba di Benteng Badai & Petir! Saya Dodi. Naiklah ke umpak benteng di sisi Tenggara untuk menganalisis kasus vandalisme halte tahun 2026 pada KOTAK 9!",
+            type: "dropdown",
+            question: "Berdasarkan studi kasus berita Maret 2026 tentang rusaknya 18 Halte Bus Listrik Pintar (Smart Shelter) & JPO senilai Rp42 miliar, pilihlah analisis konstitusional yang tepat!",
+            dropdowns: [
+                {
+                    label: "1. Tindakan membakar halte bus listrik dan JPO saat berunjuk rasa melanggar kewajiban konstitusional pada...",
+                    options: ["Pilih Pasal...", "Pasal 28J Ayat (1) & (2) UUD NRI Tahun 1945", "Pasal 26 Ayat (2) UUD NRI Tahun 1945", "Pasal 35 UUD NRI Tahun 1945"],
+                    correct: "Pasal 28J Ayat (1) & (2) UUD NRI Tahun 1945"
+                },
+                {
+                    label: "2. Cara menyampaikan aspirasi yang konstitusional sesuai Pasal 28, Pasal 28E Ayat (3), dan UU No. 9 Tahun 1998 adalah...",
+                    options: ["Pilih Sikap...", "Menyampaikan pendapat secara damai, tertib, dan menjaga fasilitas publik", "Memblokir jalan tol dan merusak rambu lalu lintas", "Menyebarkan provokasi anarkis melalui media sosial"],
+                    correct: "Menyampaikan pendapat secara damai, tertib, dan menjaga fasilitas publik"
+                }
+            ],
+            answerKeyText: "1. Pasal 28J Ayat (1) & (2) | 2. Menyampaikan pendapat secara damai, tertib, dan menjaga fasilitas publik",
+            explanation: "Kebebasan berpendapat (Pasal 28 & 28E ayat 3) wajib disertai penghormatan terhadap hak orang lain dan ketertiban umum (Pasal 28J). Merusak halte merampas hak ribuan pengguna transportasi publik."
+        },
+        {
+            id: 10,
+            zone: 5,
+            npcName: "Wira",
+            npcGender: "male",
+            npcPos: { x: 12, z: -528 },
+            boxPos: { x: -22, y: 4.65, z: -536 },
+            npcGreeting: "Saya Wira, penjaga misi terakhir! Panjatlah umpak tertinggi di Barat Laut Benteng Badai ini untuk menuntaskan KOTAK 10, lalu sentuh Mahkota Finish!",
+            type: "wordbank",
+            question: "Susunlah komitmen Garda Konstitusi berikut dengan memilih kata yang tepat secara berurutan!",
+            sentenceTemplate: "Warga negara yang berkesadaran hukum senantiasa menyeimbangkan pelaksanaan [1] dan [2] sesuai amanat [3] demi terwujudnya keadilan dan ketertiban sosial.",
+            blanks: ["hak", "kewajiban", "UUD NRI Tahun 1945"],
+            wordBank: ["hak", "kewajiban", "UUD NRI Tahun 1945", "kepentingan pribadi"],
+            answerKeyText: "[1] hak | [2] kewajiban | [3] UUD NRI Tahun 1945",
+            explanation: "Kesadaran hukum tertinggi terwujud ketika warga negara menuntut haknya secara berimbang dengan pelaksanaan kewajiban konstitusionalnya sesuai UUD NRI Tahun 1945."
+        }
+    ];
+
+    // =========================================================================
+    // 3. STATE KUSTOMISASI KARAKTER & FUNGSI MODAL / SLIDE MATERI
+    // =========================================================================
+    let playerCustomization = {
+        name: "Duta Pancasila",
+        gender: "putra",
+        outfit: "sma"
+    };
+
+    function openModal(id) {
+        ensureAudioContext();
+        playSound('click');
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.classList.remove('hidden');
+        if (id === 'modal-materi') {
+            renderMateriSlide();
+        }
+    }
+
+    function closeModal(id) {
+        playSound('click');
+        const el = document.getElementById(id);
+        if (el) el.classList.add('hidden');
+    }
+
+    function renderMateriSlide() {
+        const slide = materiSlides[currentMateriIndex];
+        if (!slide) return;
+
+        document.getElementById('materi-slide-badge').textContent = `Slide ${currentMateriIndex + 1} / ${materiSlides.length}`;
+        document.getElementById('materi-slide-title').textContent = slide.title;
+        document.getElementById('materi-slide-body').innerHTML = slide.html;
+
+        const dotsEl = document.getElementById('materi-dots');
+        if (dotsEl) {
+            dotsEl.innerHTML = materiSlides.map((_, idx) => `
+                <button onclick="jumpToMateriSlide(${idx})" class="h-2.5 rounded-full transition-all ${idx === currentMateriIndex ? 'w-6 bg-amber-400' : 'w-2.5 bg-slate-700 hover:bg-slate-500'}"></button>
+            `).join('');
+        }
+
+        const prevBtn = document.getElementById('btn-materi-prev');
+        if (prevBtn) prevBtn.disabled = currentMateriIndex === 0;
+
+        const nextBtn = document.getElementById('btn-materi-next');
+        if (nextBtn) {
+            if (currentMateriIndex === materiSlides.length - 1) {
+                nextBtn.innerHTML = `<span>Selesai &amp; Buka Petualangan</span> <i class="fa-solid fa-unlock"></i>`;
+            } else {
+                nextBtn.innerHTML = `<span>Selanjutnya</span> <i class="fa-solid fa-arrow-right"></i>`;
+            }
+        }
+
+        if (currentMateriIndex === materiSlides.length - 1) {
+            unlockAdventureAccess();
+        }
+    }
+
+    function changeMateriSlide(delta) {
+        ensureAudioContext();
+        playSound('click');
+        if (currentMateriIndex === materiSlides.length - 1 && delta > 0) {
+            unlockAdventureAccess();
+            closeModal('modal-materi');
+            return;
+        }
+        currentMateriIndex = Math.max(0, Math.min(materiSlides.length - 1, currentMateriIndex + delta));
+        renderMateriSlide();
+    }
+
+    function jumpToMateriSlide(idx) {
+        playSound('click');
+        currentMateriIndex = idx;
+        renderMateriSlide();
+    }
+
+    function unlockAdventureAccess() {
+        isMateriCompleted = true;
+        const btn = document.getElementById('btn-start-adventure');
+        if (btn) {
+            btn.className = 'px-7 sm:px-10 py-2.5 sm:py-3.5 rounded-2xl bg-gradient-to-r from-amber-400 via-amber-500 to-orange-500 hover:from-amber-300 hover:to-orange-400 text-slate-950 font-black text-sm sm:text-lg tracking-wide shadow-xl shadow-amber-500/25 flex items-center gap-3 transition transform active:scale-95';
+        }
+        const icon = document.getElementById('icon-start-adventure');
+        if (icon) icon.className = 'fa-solid fa-gamepad text-base sm:text-xl';
+        const label = document.getElementById('label-start-adventure');
+        if (label) label.textContent = 'MULAI PETUALANGAN';
+        const notice = document.getElementById('cover-lock-notice');
+        if (notice) {
+            notice.classList.add('hidden');
+            notice.classList.remove('flex');
+        }
+        const badge = document.getElementById('badge-materi-status');
+        if (badge) {
+            badge.textContent = 'Tuntas';
+            badge.className = 'absolute -top-2 right-2 px-2 py-0.5 rounded-full bg-emerald-400 text-slate-950 font-black text-[8px] sm:text-[10px] uppercase shadow';
+        }
+    }
+
+    function handleStartAdventureClick() {
+        ensureAudioContext();
+        if (!isMateriCompleted) {
+            playSound('wrong');
+            const notice = document.getElementById('cover-lock-notice');
+            if (notice) {
+                notice.classList.remove('hidden');
+                notice.classList.add('flex');
+            }
+            return;
+        }
+        playSound('click');
+        openModal('modal-customization');
+    }
+
+    function selectCharacterGender(gender) {
+        playSound('click');
+        playerCustomization.gender = gender;
+        const pBtn = document.getElementById('char-opt-putra');
+        const wBtn = document.getElementById('char-opt-putri');
+        if (pBtn && wBtn) {
+            pBtn.className = gender === 'putra'
+                ? 'p-3 rounded-2xl border-2 border-amber-400 bg-amber-500/15 text-left transition flex items-center gap-3'
+                : 'p-3 rounded-2xl border-2 border-slate-700 bg-slate-900/80 text-left transition flex items-center gap-3';
+            wBtn.className = gender === 'putri'
+                ? 'p-3 rounded-2xl border-2 border-amber-400 bg-amber-500/15 text-left transition flex items-center gap-3'
+                : 'p-3 rounded-2xl border-2 border-slate-700 bg-slate-900/80 text-left transition flex items-center gap-3';
+        }
+    }
+
+    function selectCharacterOutfit(outfit) {
+        playSound('click');
+        playerCustomization.outfit = outfit;
+        ['sma', 'batik', 'garuda', 'rompi'].forEach(k => {
+            const btn = document.getElementById('outfit-opt-' + k);
+            if (!btn) return;
+            btn.className = k === outfit
+                ? 'p-2.5 rounded-xl border-2 border-amber-400 bg-amber-500/15 text-center transition'
+                : 'p-2.5 rounded-xl border-2 border-slate-700 bg-slate-900/80 text-center transition';
+        });
+    }
+
+    function confirmCustomizationAndStart3D() {
+        const nameInput = document.getElementById('input-player-name');
+        const cleanName = (nameInput && nameInput.value.trim()) ? nameInput.value.trim() : "Duta Pancasila";
+        playerCustomization.name = cleanName;
+        closeModal('modal-customization');
+        start3DAdventureMode();
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+        try {
+            const savedPhoto = localStorage.getItem('garda_dev_profile_photo');
+            if (savedPhoto) {
+                const imgEl = document.getElementById('dev-profile-img');
+                if (imgEl) imgEl.src = savedPhoto;
+            }
+            const savedLogo = localStorage.getItem('garda_custom_logo');
+            if (savedLogo) {
+                const logoEl = document.getElementById('top-bar-custom-logo');
+                if (logoEl) {
+                    logoEl.src = savedLogo;
+                    logoEl.classList.remove('hidden');
+                }
+            }
+            const savedBg = localStorage.getItem('garda_custom_cover_bg');
+            if (savedBg) {
+                const bgEl = document.getElementById('cover-custom-bg');
+                if (bgEl) {
+                    bgEl.src = savedBg;
+                    bgEl.classList.remove('hidden');
+                }
+            }
+        } catch (e) {}
+    });
+
+    // =========================================================================
+    // 5. RELAXING AMBIENT / ACOUSTIC LO-FI & NATURE SOUNDSCAPE ENGINE
+    // =========================================================================
+    let audioCtx = null;
+    let isAudioMuted = false;
+    let bgmInterval = null;
+    let natureAmbianceNodes = null;
+    let currentBgmTheme = 'cover';
+    let bgmStepIndex = 0;
+
+    // Soothing pentatonic & acoustic nature-inspired frequencies (Lower, warmer octaves)
+    const zoneMelodies = {
+        cover:  { tempo: 1150, notes: [261.63, 293.66, 329.63, 392.00, 440.00, 392.00, 329.63, 293.66], padRoot: 130.81, birdChance: 0.35 },
+        zone1:  { tempo: 1080, notes: [293.66, 329.63, 369.99, 440.00, 493.88, 440.00, 369.99, 329.63], padRoot: 146.83, birdChance: 0.45 },
+        zone2:  { tempo: 1200, notes: [261.63, 329.63, 392.00, 493.88, 523.25, 493.88, 392.00, 329.63], padRoot: 130.81, birdChance: 0.30 },
+        zone3:  { tempo: 1250, notes: [220.00, 261.63, 293.66, 329.63, 392.00, 329.63, 293.66, 261.63], padRoot: 110.00, birdChance: 0.12 },
+        zone4:  { tempo: 1180, notes: [329.63, 392.00, 440.00, 523.25, 587.33, 523.25, 440.00, 392.00], padRoot: 164.81, birdChance: 0.15 },
+        zone5:  { tempo: 1100, notes: [196.00, 246.94, 293.66, 329.63, 392.00, 329.63, 293.66, 246.94], padRoot: 98.00,  birdChance: 0.08 }
+    };
+
+    function ensureAudioContext() {
+        if (!audioCtx) {
+            const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+            if (AudioContextClass) {
+                audioCtx = new AudioContextClass();
+            }
+        }
+        if (audioCtx && audioCtx.state === 'suspended') {
+            audioCtx.resume();
+        }
+        if (!natureAmbianceNodes && audioCtx) {
+            startNatureAmbianceLayer();
+        }
+        if (!bgmInterval) {
+            startBgmLoop();
+        }
+    }
+
+    // Continuous gentle ocean breeze / soft wind & water murmur using filtered noise
+    function startNatureAmbianceLayer() {
+        if (!audioCtx || natureAmbianceNodes) return;
+        try {
+            const bufferSize = audioCtx.sampleRate * 3;
+            const noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+            const output = noiseBuffer.getChannelData(0);
+            let lastOut = 0.0;
+            // Generate warm pink/brown-like natural noise
+            for (let i = 0; i < bufferSize; i++) {
+                const white = Math.random() * 2 - 1;
+                output[i] = (lastOut + (0.02 * white)) / 1.02;
+                lastOut = output[i];
+                output[i] *= 1.8;
+            }
+
+            const whiteNoise = audioCtx.createBufferSource();
+            whiteNoise.buffer = noiseBuffer;
+            whiteNoise.loop = true;
+
+            const bandpass = audioCtx.createBiquadFilter();
+            bandpass.type = 'lowpass';
+            bandpass.frequency.setValueAtTime(340, audioCtx.currentTime);
+
+            // Slow LFO to modulate breeze / gentle ocean wave wash
+            const lfo = audioCtx.createOscillator();
+            lfo.type = 'sine';
+            lfo.frequency.setValueAtTime(0.14, audioCtx.currentTime); // ~7 sec wave cycle
+
+            const lfoGain = audioCtx.createGain();
+            lfoGain.gain.setValueAtTime(160, audioCtx.currentTime);
+            lfo.connect(bandpass.frequency);
+
+            const masterNatureGain = audioCtx.createGain();
+            masterNatureGain.gain.setValueAtTime(isAudioMuted ? 0.0001 : 0.018, audioCtx.currentTime);
+
+            whiteNoise.connect(bandpass);
+            bandpass.connect(masterNatureGain);
+            masterNatureGain.connect(audioCtx.destination);
+
+            whiteNoise.start(0);
+            lfo.start(0);
+            natureAmbianceNodes = { masterNatureGain, bandpass };
+        } catch (e) {}
+    }
+
+    // Soft distant nature bird chirp
+    function playGentleBirdChirp() {
+        if (isAudioMuted || !audioCtx) return;
+        try {
+            const now = audioCtx.currentTime;
+            const osc = audioCtx.createOscillator();
+            const filter = audioCtx.createBiquadFilter();
+            const gain = audioCtx.createGain();
+
+            const baseFreq = 1650 + Math.random() * 450;
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(baseFreq, now);
+            osc.frequency.exponentialRampToValueAtTime(baseFreq * 1.22, now + 0.09);
+            osc.frequency.exponentialRampToValueAtTime(baseFreq * 0.96, now + 0.22);
+
+            filter.type = 'lowpass';
+            filter.frequency.setValueAtTime(2400, now);
+
+            gain.gain.setValueAtTime(0.0001, now);
+            gain.gain.linearRampToValueAtTime(0.0075, now + 0.04);
+            gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.26);
+
+            osc.connect(filter);
+            filter.connect(gain);
+            gain.connect(audioCtx.destination);
+
+            osc.start(now);
+            osc.stop(now + 0.28);
+        } catch (e) {}
+    }
+
+    // Soft kalimba / acoustic harp pluck with warm low-pass filter and gentle decay
+    function playWarmNote(freq, duration = 1.4, volume = 0.024, isPad = false) {
+        if (isAudioMuted || !audioCtx) return;
+        try {
+            const now = audioCtx.currentTime;
+            const osc = audioCtx.createOscillator();
+            const subOsc = audioCtx.createOscillator();
+            const filter = audioCtx.createBiquadFilter();
+            const gain = audioCtx.createGain();
+
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(freq, now);
+
+            // Subtle warm harmonic
+            subOsc.type = 'triangle';
+            subOsc.frequency.setValueAtTime(freq * (isPad ? 1.5 : 0.5), now);
+            const subGain = audioCtx.createGain();
+            subGain.gain.setValueAtTime(isPad ? 0.18 : 0.12, now);
+
+            filter.type = 'lowpass';
+            filter.frequency.setValueAtTime(isPad ? 520 : 950, now);
+
+            const attack = isPad ? 0.45 : 0.14;
+            gain.gain.setValueAtTime(0.0001, now);
+            gain.gain.linearRampToValueAtTime(volume, now + attack);
+            gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+
+            osc.connect(filter);
+            subOsc.connect(subGain);
+            subGain.connect(filter);
+            filter.connect(gain);
+            gain.connect(audioCtx.destination);
+
+            osc.start(now);
+            subOsc.start(now);
+            osc.stop(now + duration + 0.08);
+            subOsc.stop(now + duration + 0.08);
+        } catch (e) {}
+    }
+
+    function startBgmLoop() {
+        if (bgmInterval) clearInterval(bgmInterval);
+        const cfg = zoneMelodies[currentBgmTheme] || zoneMelodies.cover;
+        bgmInterval = setInterval(() => {
+            if (isAudioMuted || !audioCtx) return;
+            const notes = cfg.notes;
+            const freq = notes[bgmStepIndex % notes.length];
+            // Soft acoustic pluck
+            playWarmNote(freq, 1.55, 0.022, false);
+
+            // Warm ambient pad chord every 4 steps
+            if (bgmStepIndex % 4 === 0) {
+                playWarmNote(cfg.padRoot, 3.6, 0.015, true);
+            }
+            // Occasional gentle nature bird chirp
+            if (bgmStepIndex % 3 === 1 && Math.random() < (cfg.birdChance || 0.25)) {
+                setTimeout(() => playGentleBirdChirp(), 320);
+            }
+            bgmStepIndex++;
+        }, cfg.tempo);
+    }
+
+    function setBgmTheme(theme) {
+        if (currentBgmTheme === theme) return;
+        currentBgmTheme = theme;
+        bgmStepIndex = 0;
+        startBgmLoop();
+    }
+
+    function playSound(type) {
+        if (isAudioMuted || !audioCtx) return;
+        if (type === 'click') {
+            playWarmNote(440.00, 0.22, 0.022, false);
+        } else if (type === 'jump') {
+            playWarmNote(329.63, 0.25, 0.026, false);
+            setTimeout(() => playWarmNote(440.00, 0.32, 0.026, false), 65);
+        } else if (type === 'success') {
+            [392.00, 493.88, 587.33, 783.99].forEach((f, i) => {
+                setTimeout(() => playWarmNote(f, 0.65, 0.03, false), i * 110);
+            });
+        } else if (type === 'wrong' || type === 'fall') {
+            playWarmNote(220.00, 0.45, 0.028, false);
+            setTimeout(() => playWarmNote(174.61, 0.6, 0.028, false), 140);
+        }
+    }
+
+    function toggleAudioMute() {
+        ensureAudioContext();
+        isAudioMuted = !isAudioMuted;
+        if (natureAmbianceNodes && natureAmbianceNodes.masterNatureGain && audioCtx) {
+            natureAmbianceNodes.masterNatureGain.gain.setValueAtTime(
+                isAudioMuted ? 0.0001 : 0.018,
+                audioCtx.currentTime
+            );
+        }
+        const icon = document.getElementById('icon-audio-toggle');
+        if (icon) {
+            icon.className = isAudioMuted ? 'fa-solid fa-volume-xmark text-xs sm:text-sm text-rose-400' : 'fa-solid fa-volume-high text-xs sm:text-sm';
+        }
+    }
+
+    function toggleFullScreen() {
+        if (!document.fullscreenElement) {
+            document.documentElement.requestFullscreen().catch(() => {});
+        } else {
+            document.exitFullscreen().catch(() => {});
+        }
+    }
+
+    // =========================================================================
+    // 6. 3D ROBLOX ADVENTURE WORLD (THREE.JS)
+    // =========================================================================
+    let scene, camera, renderer;
+    let playerGroup, playerLeftArm, playerRightArm, playerLeftLeg, playerRightLeg;
+    let isGameRunning = false;
+    let cameraYaw = 0;
+    let cameraPitch = 0.38;
+    let isPointerDragging = false;
+    let prevPointerPos = { x: 0, y: 0 };
+
+    let playerPos = { x: 0, y: 0.6, z: 18 };
+    let playerVelY = 0;
+    let isGrounded = true;
+    let currentZoneIndex = 1;
+    let zoneLives = { 1: 3, 2: 3, 3: 3, 4: 3, 5: 3 };
+    let playerScore = 0;
+    let solvedQuests = {};
+    let collectedZoneKeys = {};
+    let unlockedBridges = {};
+
+    let moveKeys = { forward: false, backward: false, left: false, right: false };
+    let platformsList = [];
+    let npcObjects = [];
+    let boxObjects = [];
+    let keyObjects = {};
+    let gateBarriers = {};
+    let finishCrownMesh = null;
+    let weatherParticles = null;
+    let splashParticles = [];
+    let nearbyTarget = null;
+
+    function start3DAdventureMode() {
+        document.getElementById('main-cover-screen').classList.add('hidden');
+        document.getElementById('game-screen-container').classList.remove('hidden');
+        document.getElementById('game-hud-center').classList.remove('hidden');
+        document.getElementById('game-hud-center').classList.add('flex');
+        document.getElementById('game-hud-score').classList.remove('hidden');
+        document.getElementById('game-hud-score').classList.add('flex');
+
+        if (!scene) {
+            initThreeWorld();
+        } else {
+            rebuildPlayerCharacterMesh();
+            onStageResize();
+        }
+        isGameRunning = true;
+        setBgmTheme('zone' + currentZoneIndex);
+        updateGameHUD();
+    }
+
+    function exitGameToCover() {
+        isGameRunning = false;
+        document.getElementById('game-screen-container').classList.add('hidden');
+        document.getElementById('main-cover-screen').classList.remove('hidden');
+        document.getElementById('game-hud-center').classList.add('hidden');
+        document.getElementById('game-hud-center').classList.remove('flex');
+        document.getElementById('game-hud-score').classList.add('hidden');
+        document.getElementById('game-hud-score').classList.remove('flex');
+        setBgmTheme('cover');
+    }
+
+    function createTextLabelSprite(text, bgColor = "#0f172a", borderColor = "#fbbf24", textColor = "#ffffff") {
+        const canvas = document.createElement('canvas');
+        canvas.width = 512;
+        canvas.height = 128;
+        const ctx = canvas.getContext('2d');
+
+        ctx.fillStyle = bgColor;
+        ctx.strokeStyle = borderColor;
+        ctx.lineWidth = 8;
+        ctx.beginPath();
+        ctx.roundRect(12, 16, 488, 96, 28);
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.fillStyle = textColor;
+        ctx.font = '900 42px "Plus Jakarta Sans", sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(text, 256, 66);
+
+        const tex = new THREE.CanvasTexture(canvas);
+        const mat = new THREE.SpriteMaterial({ map: tex, transparent: true });
+        const sprite = new THREE.Sprite(mat);
+        sprite.scale.set(4.5, 1.15, 1);
+        return sprite;
+    }
+
+    function createBatikTexture() {
+        const c = document.createElement('canvas');
+        c.width = 128;
+        c.height = 128;
+        const ctx = c.getContext('2d');
+        ctx.fillStyle = '#451a03';
+        ctx.fillRect(0, 0, 128, 128);
+        ctx.strokeStyle = '#fbbf24';
+        ctx.lineWidth = 3;
+        for (let y = 16; y < 128; y += 32) {
+            for (let x = 16; x < 128; x += 32) {
+                ctx.beginPath();
+                ctx.arc(x, y, 12, 0, Math.PI * 2);
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.arc(x, y, 4, 0, Math.PI * 2);
+                ctx.fillStyle = '#fde68a';
+                ctx.fill();
+            }
+        }
+        return new THREE.CanvasTexture(c);
+    }
+
+    // Complete 3D Face Features (Eyes, Eyebrows, 3D Nose, Smiling Mouth) on Front (+Z)
+    function addRobloxFaceFeatures(headMesh) {
+        const eyeMat = new THREE.MeshBasicMaterial({ color: 0x0f172a });
+        const pupilMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
+        const noseMat = new THREE.MeshLambertMaterial({ color: 0xeab676 });
+        const mouthMat = new THREE.MeshBasicMaterial({ color: 0x991b1b });
+
+        const leftEye = new THREE.Mesh(new THREE.BoxGeometry(0.13, 0.15, 0.04), eyeMat);
+        leftEye.position.set(-0.18, 0.06, 0.46);
+        headMesh.add(leftEye);
+
+        const rightEye = new THREE.Mesh(new THREE.BoxGeometry(0.13, 0.15, 0.04), eyeMat);
+        rightEye.position.set(0.18, 0.06, 0.46);
+        headMesh.add(rightEye);
+
+        const leftSpark = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.05, 0.05), pupilMat);
+        leftSpark.position.set(-0.15, 0.09, 0.47);
+        headMesh.add(leftSpark);
+
+        const rightSpark = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.05, 0.05), pupilMat);
+        rightSpark.position.set(0.21, 0.09, 0.47);
+        headMesh.add(rightSpark);
+
+        const leftBrow = new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.04, 0.04), eyeMat);
+        leftBrow.position.set(-0.18, 0.19, 0.46);
+        headMesh.add(leftBrow);
+
+        const rightBrow = new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.04, 0.04), eyeMat);
+        rightBrow.position.set(0.18, 0.19, 0.46);
+        headMesh.add(rightBrow);
+
+        const nose = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.12, 0.1), noseMat);
+        nose.position.set(0, -0.02, 0.49);
+        headMesh.add(nose);
+
+        const mouth = new THREE.Mesh(new THREE.BoxGeometry(0.26, 0.06, 0.04), mouthMat);
+        mouth.position.set(0, -0.19, 0.46);
+        headMesh.add(mouth);
+    }
+
+    function rebuildPlayerCharacterMesh() {
+        if (!scene) return;
+        if (playerGroup) {
+            scene.remove(playerGroup);
+        }
+        playerGroup = new THREE.Group();
+
+        const skinMat = new THREE.MeshLambertMaterial({ color: 0xfcd34d });
+        let torsoMat, pantsMat;
+
+        if (playerCustomization.outfit === 'batik') {
+            torsoMat = new THREE.MeshLambertMaterial({ map: createBatikTexture() });
+            pantsMat = new THREE.MeshLambertMaterial({ color: 0x1e293b });
+        } else if (playerCustomization.outfit === 'garuda') {
+            torsoMat = new THREE.MeshLambertMaterial({ color: 0xdc2626 });
+            pantsMat = new THREE.MeshLambertMaterial({ color: 0xf8fafc });
+        } else if (playerCustomization.outfit === 'rompi') {
+            torsoMat = new THREE.MeshLambertMaterial({ color: 0x0284c7 });
+            pantsMat = new THREE.MeshLambertMaterial({ color: 0x0f172a });
+        } else {
+            torsoMat = new THREE.MeshLambertMaterial({ color: 0xf8fafc });
+            pantsMat = new THREE.MeshLambertMaterial({ color: 0x64748b });
+        }
+
+        // Torso
+        const torso = new THREE.Mesh(new THREE.BoxGeometry(1.1, 1.25, 0.6), torsoMat);
+        torso.position.y = 1.45;
+        playerGroup.add(torso);
+
+        // Front-only attributes (+Z) so tie never appears on back
+        if (playerCustomization.outfit === 'sma') {
+            const tie = new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.72, 0.05), new THREE.MeshLambertMaterial({ color: 0x475569 }));
+            tie.position.set(0, 0.12, 0.32);
+            torso.add(tie);
+            const pocketBadge = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.2, 0.05), new THREE.MeshLambertMaterial({ color: 0xfbbf24 }));
+            pocketBadge.position.set(0.3, 0.22, 0.32);
+            torso.add(pocketBadge);
+        } else if (playerCustomization.outfit === 'garuda') {
+            const stripe = new THREE.Mesh(new THREE.BoxGeometry(1.12, 0.35, 0.62), new THREE.MeshLambertMaterial({ color: 0xffffff }));
+            stripe.position.set(0, -0.25, 0);
+            torso.add(stripe);
+            const shield = new THREE.Mesh(new THREE.BoxGeometry(0.28, 0.32, 0.06), new THREE.MeshLambertMaterial({ color: 0xfbbf24 }));
+            shield.position.set(0, 0.2, 0.33);
+            torso.add(shield);
+        } else if (playerCustomization.outfit === 'rompi') {
+            const vestPocketL = new THREE.Mesh(new THREE.BoxGeometry(0.32, 0.3, 0.1), new THREE.MeshLambertMaterial({ color: 0x1e3a8a }));
+            vestPocketL.position.set(-0.28, -0.15, 0.34);
+            torso.add(vestPocketL);
+            const vestPocketR = vestPocketL.clone();
+            vestPocketR.position.x = 0.28;
+            torso.add(vestPocketR);
+        }
+
+        // 3D Backpack on Back (-Z) visible when walking forward
+        const backpackGroup = new THREE.Group();
+        const packBody = new THREE.Mesh(new THREE.BoxGeometry(0.82, 0.92, 0.38), new THREE.MeshLambertMaterial({ color: 0x1e293b }));
+        packBody.position.set(0, 0.05, -0.46);
+        backpackGroup.add(packBody);
+        const packPocket = new THREE.Mesh(new THREE.BoxGeometry(0.62, 0.42, 0.12), new THREE.MeshLambertMaterial({ color: 0xf59e0b }));
+        packPocket.position.set(0, -0.12, -0.68);
+        backpackGroup.add(packPocket);
+        const strapL = new THREE.Mesh(new THREE.BoxGeometry(0.12, 1.18, 0.66), new THREE.MeshLambertMaterial({ color: 0x334155 }));
+        strapL.position.set(-0.34, 0.04, 0);
+        backpackGroup.add(strapL);
+        const strapR = strapL.clone();
+        strapR.position.x = 0.34;
+        backpackGroup.add(strapR);
+        torso.add(backpackGroup);
+
+        // Head
+        const head = new THREE.Mesh(new THREE.BoxGeometry(0.9, 0.9, 0.9), skinMat);
+        head.position.y = 2.55;
+        addRobloxFaceFeatures(head);
+
+        const hairMat = new THREE.MeshLambertMaterial({ color: 0x1c1917 });
+        if (playerCustomization.gender === 'putri') {
+            // Long flowing hair + gold ribbon headband
+            const hairTop = new THREE.Mesh(new THREE.BoxGeometry(0.96, 0.3, 0.96), hairMat);
+            hairTop.position.y = 0.38;
+            head.add(hairTop);
+            const hairBack = new THREE.Mesh(new THREE.BoxGeometry(0.94, 1.15, 0.28), hairMat);
+            hairBack.position.set(0, -0.18, -0.42);
+            head.add(hairBack);
+            const hairSideL = new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.95, 0.75), hairMat);
+            hairSideL.position.set(-0.46, -0.1, -0.05);
+            head.add(hairSideL);
+            const hairSideR = hairSideL.clone();
+            hairSideR.position.x = 0.46;
+            head.add(hairSideR);
+            const headband = new THREE.Mesh(new THREE.BoxGeometry(0.98, 0.12, 0.35), new THREE.MeshLambertMaterial({ color: 0xfbbf24 }));
+            headband.position.set(0, 0.46, 0.15);
+            head.add(headband);
+        } else {
+            // Putra short hair + school cap
+            const hairShort = new THREE.Mesh(new THREE.BoxGeometry(0.95, 0.28, 0.95), hairMat);
+            hairShort.position.y = 0.38;
+            head.add(hairShort);
+            const capVisor = new THREE.Mesh(new THREE.BoxGeometry(0.86, 0.1, 0.35), new THREE.MeshLambertMaterial({ color: 0x475569 }));
+            capVisor.position.set(0, 0.38, 0.55);
+            head.add(capVisor);
+        }
+        playerGroup.add(head);
+
+        // Arms & Legs
+        playerLeftArm = new THREE.Mesh(new THREE.BoxGeometry(0.38, 1.15, 0.38), skinMat);
+        playerLeftArm.position.set(-0.78, 1.45, 0);
+        playerGroup.add(playerLeftArm);
+
+        playerRightArm = new THREE.Mesh(new THREE.BoxGeometry(0.38, 1.15, 0.38), skinMat);
+        playerRightArm.position.set(0.78, 1.45, 0);
+        playerGroup.add(playerRightArm);
+
+        playerLeftLeg = new THREE.Mesh(new THREE.BoxGeometry(0.46, 1.0, 0.46), pantsMat);
+        playerLeftLeg.position.set(-0.28, 0.5, 0);
+        playerGroup.add(playerLeftLeg);
+
+        playerRightLeg = new THREE.Mesh(new THREE.BoxGeometry(0.46, 1.0, 0.46), pantsMat);
+        playerRightLeg.position.set(0.28, 0.5, 0);
+        playerGroup.add(playerRightLeg);
+
+        // Floating Name Tag
+        const nameTag = createTextLabelSprite(playerCustomization.name, "#0f172a", "#38bdf8", "#fef08a");
+        nameTag.position.set(0, 3.65, 0);
+        playerGroup.add(nameTag);
+
+        playerGroup.position.set(playerPos.x, playerPos.y, playerPos.z);
+        scene.add(playerGroup);
+    }
+
+    // Build NPC with clear Male/Female visual differences + 3D arms & hands
+    function createNPCCharacter(quest) {
+        const group = new THREE.Group();
+        const skinMat = new THREE.MeshLambertMaterial({ color: 0xfde68a });
+        const isFemale = quest.npcGender === 'female';
+
+        const torsoColor = isFemale ? 0xec4899 : 0x059669;
+        const lowerColor = isFemale ? 0x78350f : 0x1e293b;
+
+        const torso = new THREE.Mesh(new THREE.BoxGeometry(1.1, 1.25, 0.6), new THREE.MeshLambertMaterial({ color: torsoColor }));
+        torso.position.y = 1.45;
+        group.add(torso);
+
+        if (isFemale) {
+            const sash = new THREE.Mesh(new THREE.BoxGeometry(0.25, 1.26, 0.64), new THREE.MeshLambertMaterial({ color: 0xfbbf24 }));
+            sash.position.set(-0.25, 0, 0);
+            torso.add(sash);
+        } else {
+            const pocket = new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.24, 0.05), new THREE.MeshLambertMaterial({ color: 0xfbbf24 }));
+            pocket.position.set(0.28, 0.2, 0.32);
+            torso.add(pocket);
+        }
+
+        // 3D Arms & Hands for NPC
+        const leftArmGroup = new THREE.Group();
+        leftArmGroup.position.set(-0.78, 1.9, 0);
+        const sleeveL = new THREE.Mesh(new THREE.BoxGeometry(0.36, 0.75, 0.36), new THREE.MeshLambertMaterial({ color: torsoColor }));
+        sleeveL.position.y = -0.35;
+        leftArmGroup.add(sleeveL);
+        const handL = new THREE.Mesh(new THREE.BoxGeometry(0.32, 0.35, 0.32), skinMat);
+        handL.position.y = -0.88;
+        leftArmGroup.add(handL);
+        group.add(leftArmGroup);
+
+        const rightArmGroup = new THREE.Group();
+        rightArmGroup.position.set(0.78, 1.9, 0);
+        const sleeveR = sleeveL.clone();
+        rightArmGroup.add(sleeveR);
+        const handR = handL.clone();
+        rightArmGroup.add(handR);
+        group.add(rightArmGroup);
+
+        // Head + Face
+        const head = new THREE.Mesh(new THREE.BoxGeometry(0.9, 0.9, 0.9), skinMat);
+        head.position.y = 2.55;
+        addRobloxFaceFeatures(head);
+
+        if (isFemale) {
+            const hairMat = new THREE.MeshLambertMaterial({ color: 0x1c1917 });
+            const hairTop = new THREE.Mesh(new THREE.BoxGeometry(0.96, 0.28, 0.96), hairMat);
+            hairTop.position.y = 0.38;
+            head.add(hairTop);
+            const hairBack = new THREE.Mesh(new THREE.BoxGeometry(0.94, 1.15, 0.28), hairMat);
+            hairBack.position.set(0, -0.15, -0.42);
+            head.add(hairBack);
+            const crownBand = new THREE.Mesh(new THREE.BoxGeometry(0.98, 0.14, 0.32), new THREE.MeshLambertMaterial({ color: 0xfbbf24 }));
+            crownBand.position.set(0, 0.46, 0.15);
+            head.add(crownBand);
+        } else {
+            // Nusantara Peci with Gold Trim
+            const peci = new THREE.Mesh(new THREE.BoxGeometry(0.94, 0.36, 0.94), new THREE.MeshLambertMaterial({ color: 0x0f172a }));
+            peci.position.y = 0.48;
+            head.add(peci);
+            const peciTrim = new THREE.Mesh(new THREE.BoxGeometry(0.96, 0.07, 0.96), new THREE.MeshLambertMaterial({ color: 0xfbbf24 }));
+            peciTrim.position.y = 0.34;
+            head.add(peciTrim);
+        }
+        group.add(head);
+
+        const legL = new THREE.Mesh(new THREE.BoxGeometry(0.46, 1.0, 0.46), new THREE.MeshLambertMaterial({ color: lowerColor }));
+        legL.position.set(-0.26, 0.5, 0);
+        group.add(legL);
+        const legR = legL.clone();
+        legR.position.x = 0.26;
+        group.add(legR);
+
+        const label = createTextLabelSprite(quest.npcName, "#064e3b", "#34d399", "#ffffff");
+        label.position.set(0, 3.65, 0);
+        group.add(label);
+
+        group.position.set(quest.npcPos.x, 0.6, quest.npcPos.z);
+        group.userData = { quest, rightArmGroup };
+        return group;
+    }
+
+    // Build 3D Treasure Chest Mission Box with Floating Label ("KOTAK 1" .. "KOTAK 10")
+    function createMissionBox3D(quest) {
+        const group = new THREE.Group();
+        const baseChest = new THREE.Mesh(
+            new THREE.BoxGeometry(2.1, 1.35, 1.5),
+            new THREE.MeshLambertMaterial({ color: 0x92400e })
+        );
+        baseChest.position.y = 0.68;
+        group.add(baseChest);
+
+        const goldTrim = new THREE.Mesh(
+            new THREE.BoxGeometry(2.2, 0.25, 1.6),
+            new THREE.MeshLambertMaterial({ color: 0xfbbf24 })
+        );
+        goldTrim.position.y = 1.25;
+        group.add(goldTrim);
+
+        const lockPlate = new THREE.Mesh(
+            new THREE.BoxGeometry(0.42, 0.52, 0.18),
+            new THREE.MeshLambertMaterial({ color: 0xfef08a })
+        );
+        lockPlate.position.set(0, 1.1, 0.78);
+        group.add(lockPlate);
+
+        // Vertical light beacon
+        const beacon = new THREE.Mesh(
+            new THREE.CylinderGeometry(0.25, 0.25, 6.5, 12),
+            new THREE.MeshBasicMaterial({ color: 0xfbbf24, transparent: true, opacity: 0.26 })
+        );
+        beacon.position.y = 3.5;
+        group.add(beacon);
+
+        const label = createTextLabelSprite(`KOTAK ${quest.id}`, "#78350f", "#fbbf24", "#fef08a");
+        label.position.set(0, 2.75, 0);
+        group.add(label);
+
+        group.position.set(quest.boxPos.x, quest.boxPos.y, quest.boxPos.z);
+        group.userData = { quest, baseChest, beacon };
+        return group;
+    }
+
+    // Real 3D Key Model (Head Ring, Gem, Shaft, 2 Key Teeth)
+    function create3DKeyMesh(zoneCfg) {
+        const keyGroup = new THREE.Group();
+        const goldMat = new THREE.MeshLambertMaterial({ color: 0xfbbf24 });
+        const gemMat = new THREE.MeshBasicMaterial({ color: 0x38bdf8 });
+
+        const headBow = new THREE.Mesh(new THREE.TorusGeometry(0.55, 0.16, 12, 24), goldMat);
+        headBow.position.y = 1.9;
+        keyGroup.add(headBow);
+
+        const centerGem = new THREE.Mesh(new THREE.OctahedronGeometry(0.28), gemMat);
+        centerGem.position.y = 1.9;
+        keyGroup.add(centerGem);
+
+        const shaft = new THREE.Mesh(new THREE.CylinderGeometry(0.13, 0.13, 1.45, 12), goldMat);
+        shaft.position.y = 0.95;
+        keyGroup.add(shaft);
+
+        const tooth1 = new THREE.Mesh(new THREE.BoxGeometry(0.38, 0.16, 0.14), goldMat);
+        tooth1.position.set(0.22, 0.55, 0);
+        keyGroup.add(tooth1);
+
+        const tooth2 = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.16, 0.14), goldMat);
+        tooth2.position.set(0.18, 0.3, 0);
+        keyGroup.add(tooth2);
+
+        const label = createTextLabelSprite(`KUNCI ZONA ${zoneCfg.id}`, "#1e3a8a", "#fbbf24", "#fef08a");
+        label.position.set(0, 3.0, 0);
+        keyGroup.add(label);
+
+        keyGroup.position.set(zoneCfg.keyPos.x, zoneCfg.keyPos.y, zoneCfg.keyPos.z);
+        keyGroup.visible = false;
+        return keyGroup;
+    }
+
+    // Distinct Scenery per Zone (Palm Trees, Traditional Houses, Skyscrapers, Snow Pines/Snowmen, Fortress Watchtowers)
+    function buildZoneSceneryElement(x, y, z, zoneId, itemIndex) {
+        const group = new THREE.Group();
+        group.position.set(x, y, z);
+
+        if (zoneId === 1) {
+            if (itemIndex % 3 === 0) {
+                // Tropical Pendopo / Gazebo
+                const base = new THREE.Mesh(new THREE.BoxGeometry(4.2, 0.4, 4.2), new THREE.MeshLambertMaterial({ color: 0x78350f }));
+                base.position.y = 0.2;
+                group.add(base);
+                const roof = new THREE.Mesh(new THREE.ConeGeometry(3.4, 2.2, 4), new THREE.MeshLambertMaterial({ color: 0xb45309 }));
+                roof.position.y = 3.2;
+                roof.rotation.y = Math.PI / 4;
+                group.add(roof);
+            } else {
+                // Coconut Palm Tree
+                const trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.28, 0.42, 4.5, 8), new THREE.MeshLambertMaterial({ color: 0x854d0e }));
+                trunk.position.y = 2.25;
+                group.add(trunk);
+                const crown = new THREE.Mesh(new THREE.ConeGeometry(2.2, 1.6, 7), new THREE.MeshLambertMaterial({ color: 0x15803d }));
+                crown.position.y = 4.6;
+                group.add(crown);
+            }
+        } else if (zoneId === 2) {
+            if (itemIndex % 2 === 0) {
+                // Rumah Adat Joglo / Candi Bata
+                const wall = new THREE.Mesh(new THREE.BoxGeometry(4.5, 2.6, 3.8), new THREE.MeshLambertMaterial({ color: 0x9a3412 }));
+                wall.position.y = 1.3;
+                group.add(wall);
+                const roof = new THREE.Mesh(new THREE.ConeGeometry(3.6, 2.4, 4), new THREE.MeshLambertMaterial({ color: 0x451a03 }));
+                roof.position.y = 3.6;
+                roof.rotation.y = Math.PI / 4;
+                group.add(roof);
+            } else {
+                // Golden Cypress Tree
+                const trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.25, 0.35, 2.2, 8), new THREE.MeshLambertMaterial({ color: 0x713f12 }));
+                trunk.position.y = 1.1;
+                group.add(trunk);
+                const foliage = new THREE.Mesh(new THREE.ConeGeometry(1.6, 4.2, 8), new THREE.MeshLambertMaterial({ color: 0xd97706 }));
+                foliage.position.y = 3.5;
+                group.add(foliage);
+            }
+        } else if (zoneId === 3) {
+            // High-rise Urban Skyscrapers with glowing windows
+            const h = 8 + (itemIndex % 4) * 3.2;
+            const bldg = new THREE.Mesh(new THREE.BoxGeometry(4.6, h, 4.6), new THREE.MeshLambertMaterial({ color: 0x1e293b }));
+            bldg.position.y = h / 2;
+            group.add(bldg);
+            const glowStrip = new THREE.Mesh(new THREE.BoxGeometry(4.7, h * 0.75, 1.2), new THREE.MeshBasicMaterial({ color: 0x38bdf8 }));
+            glowStrip.position.y = h / 2;
+            group.add(glowStrip);
+        } else if (zoneId === 4) {
+            if (itemIndex % 3 === 0) {
+                // Snowman / Igloo
+                const b1 = new THREE.Mesh(new THREE.SphereGeometry(1.1, 12, 12), new THREE.MeshLambertMaterial({ color: 0xffffff }));
+                b1.position.y = 1.0;
+                group.add(b1);
+                const b2 = new THREE.Mesh(new THREE.SphereGeometry(0.75, 12, 12), new THREE.MeshLambertMaterial({ color: 0xffffff }));
+                b2.position.y = 2.4;
+                group.add(b2);
+            } else {
+                // Snow Pine Tree
+                const pine1 = new THREE.Mesh(new THREE.ConeGeometry(2.1, 3.2, 8), new THREE.MeshLambertMaterial({ color: 0x0f766e }));
+                pine1.position.y = 2.2;
+                group.add(pine1);
+                const snowTop = new THREE.Mesh(new THREE.ConeGeometry(1.6, 2.2, 8), new THREE.MeshLambertMaterial({ color: 0xf8fafc }));
+                snowTop.position.y = 4.0;
+                group.add(snowTop);
+            }
+        } else {
+            // Zone 5: Fortress Watchtowers & Lightning Obelisks
+            const tower = new THREE.Mesh(new THREE.CylinderGeometry(1.8, 2.2, 9.5, 8), new THREE.MeshLambertMaterial({ color: 0x0f172a }));
+            tower.position.y = 4.75;
+            group.add(tower);
+            const crystal = new THREE.Mesh(new THREE.OctahedronGeometry(1.1), new THREE.MeshBasicMaterial({ color: 0xa855f7 }));
+            crystal.position.y = 10.5;
+            group.add(crystal);
+        }
+
+        scene.add(group);
+    }
+
+    function addSteppedMound(centerX, centerZ, topHeight, zoneColor) {
+        const steps = topHeight > 3.8 ? 3 : 2;
+        for (let s = 0; s < steps; s++) {
+            const w = 13 - s * 3.2;
+            const d = 13 - s * 3.2;
+            const h = 1.35;
+            const yCenter = 0.6 + s * 1.35 + h / 2;
+            const stepMesh = new THREE.Mesh(
+                new THREE.BoxGeometry(w, h, d),
+                new THREE.MeshLambertMaterial({ color: s % 2 === 0 ? zoneColor : 0x64748b })
+            );
+            stepMesh.position.set(centerX, yCenter, centerZ);
+            scene.add(stepMesh);
+            platformsList.push({
+                minX: centerX - w / 2,
+                maxX: centerX + w / 2,
+                minZ: centerZ - d / 2,
+                maxZ: centerZ + d / 2,
+                topY: 0.6 + (s + 1) * 1.35
+            });
+        }
+    }
+
+    function initThreeWorld() {
+        const holder = document.getElementById('three-canvas-holder');
+        scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x38bdf8);
+        scene.fog = new THREE.FogExp2(0x7dd3fc, 0.0045);
+
+        camera = new THREE.PerspectiveCamera(60, holder.clientWidth / holder.clientHeight, 0.1, 450);
+        renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(holder.clientWidth, holder.clientHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        holder.innerHTML = '';
+        holder.appendChild(renderer.domElement);
+
+        const ambient = new THREE.AmbientLight(0xffffff, 0.78);
+        scene.add(ambient);
+        const dirLight = new THREE.DirectionalLight(0xfffbeb, 0.85);
+        dirLight.position.set(45, 90, 40);
+        scene.add(dirLight);
+
+        // Ocean Floor
+        const ocean = new THREE.Mesh(
+            new THREE.PlaneGeometry(600, 1200),
+            new THREE.MeshLambertMaterial({ color: 0x0284c7 })
+        );
+        ocean.rotation.x = -Math.PI / 2;
+        ocean.position.set(0, -1.8, -260);
+        scene.add(ocean);
+
+        // Build 5 Expansive Islands (72 x 76 units each) + Stepped Mounds + Bridges
+        zoneDefinitions.forEach((zCfg, idx) => {
+            const island = new THREE.Mesh(
+                new THREE.BoxGeometry(72, 2.4, 76),
+                new THREE.MeshLambertMaterial({ color: zCfg.groundColor })
+            );
+            island.position.set(0, -0.6, zCfg.centerZ);
+            scene.add(island);
+
+            platformsList.push({
+                minX: -36, maxX: 36,
+                minZ: zCfg.centerZ - 38, maxZ: zCfg.centerZ + 38,
+                topY: 0.6
+            });
+
+            // Central Monument Altar
+            const altar = new THREE.Mesh(
+                new THREE.BoxGeometry(9, 2.0, 9),
+                new THREE.MeshLambertMaterial({ color: 0x94a3b8 })
+            );
+            altar.position.set(0, 1.6, zCfg.centerZ);
+            scene.add(altar);
+            platformsList.push({
+                minX: -4.5, maxX: 4.5,
+                minZ: zCfg.centerZ - 4.5, maxZ: zCfg.centerZ + 4.5,
+                topY: 2.6
+            });
+
+            // 4 Corner Stepped Mounds (Umpak-umpakan) per Island
+            addSteppedMound(22, zCfg.centerZ + 14, 3.3, zCfg.groundColor);
+            addSteppedMound(-22, zCfg.centerZ - 16, 4.5, zCfg.groundColor);
+            addSteppedMound(22, zCfg.centerZ - 16, 4.5, zCfg.groundColor);
+            addSteppedMound(-22, zCfg.centerZ + 16, 3.3, zCfg.groundColor);
+
+            // Scenery Perimeter
+            const sceneryOffsets = [
+                [-30, 28], [30, 28], [-30, -28], [30, -28],
+                [-31, 0], [31, 0], [0, 30], [-16, 28], [16, -28], [-28, 12]
+            ];
+            sceneryOffsets.forEach((ofs, sIdx) => {
+                buildZoneSceneryElement(ofs[0], 0.6, zCfg.centerZ + ofs[1], zCfg.id, sIdx);
+            });
+
+            // Zone Key (Zones 1..4)
+            if (zCfg.keyPos) {
+                const keyMesh = create3DKeyMesh(zCfg);
+                scene.add(keyMesh);
+                keyObjects[zCfg.id] = keyMesh;
+            }
+
+            // Bridge to Next Zone
+            if (idx < zoneDefinitions.length - 1) {
+                const bridgeZ = zCfg.centerZ - 65;
+                const bridge = new THREE.Mesh(
+                    new THREE.BoxGeometry(8, 0.8, 54),
+                    new THREE.MeshLambertMaterial({ color: 0x92400e })
+                );
+                bridge.position.set(0, 0.2, bridgeZ);
+                scene.add(bridge);
+
+                platformsList.push({
+                    minX: -4, maxX: 4,
+                    minZ: bridgeZ - 27, maxZ: bridgeZ + 27,
+                    topY: 0.6,
+                    requireBridgeZone: zCfg.id
+                });
+
+                // Gate Barrier at North Edge of Island
+                const gate = new THREE.Mesh(
+                    new THREE.BoxGeometry(8.5, 5.5, 0.8),
+                    new THREE.MeshLambertMaterial({ color: 0xef4444, transparent: true, opacity: 0.72 })
+                );
+                gate.position.set(0, 3.2, zCfg.centerZ - 38);
+                scene.add(gate);
+                gateBarriers[zCfg.id] = gate;
+            }
+        });
+
+        // Finish Monument Crown in Zone 5
+        finishCrownMesh = new THREE.Mesh(
+            new THREE.OctahedronGeometry(1.8),
+            new THREE.MeshBasicMaterial({ color: 0xfbbf24 })
+        );
+        finishCrownMesh.position.set(0, 3.2, -550);
+        scene.add(finishCrownMesh);
+        const finishLabel = createTextLabelSprite("MAHKOTA FINISH", "#78350f", "#fbbf24", "#fef08a");
+        finishLabel.position.set(0, 5.5, -550);
+        scene.add(finishLabel);
+
+        // Spawn NPCs & 3D Mission Boxes
+        missionQuests.forEach(q => {
+            const npc = createNPCCharacter(q);
+            scene.add(npc);
+            npcObjects.push(npc);
+
+            const box = createMissionBox3D(q);
+            scene.add(box);
+            boxObjects.push(box);
+        });
+
+        // Weather Particles (Snow / Rain)
+        const partGeo = new THREE.BufferGeometry();
+        const partCount = 450;
+        const posArr = new Float32Array(partCount * 3);
+        for (let i = 0; i < partCount * 3; i += 3) {
+            posArr[i] = (Math.random() - 0.5) * 90;
+            posArr[i + 1] = Math.random() * 35 + 2;
+            posArr[i + 2] = (Math.random() - 0.5) * 90;
+        }
+        partGeo.setAttribute('position', new THREE.BufferAttribute(posArr, 3));
+        weatherParticles = new THREE.Points(
+            partGeo,
+            new THREE.PointsMaterial({ color: 0xffffff, size: 0.45, transparent: true, opacity: 0.8 })
+        );
+        weatherParticles.visible = false;
+        scene.add(weatherParticles);
+
+        rebuildPlayerCharacterMesh();
+        setupOrbitAndKeyboardListeners(holder);
+        window.addEventListener('resize', onStageResize);
+        requestAnimationFrame(animate3DLoop);
+    }
+
+    function onStageResize() {
+        const holder = document.getElementById('three-canvas-holder');
+        if (!holder || !renderer || !camera) return;
+        const w = holder.clientWidth || 800;
+        const h = holder.clientHeight || 450;
+        camera.aspect = w / h;
+        camera.updateProjectionMatrix();
+        renderer.setSize(w, h);
+    }
+
+    function setupOrbitAndKeyboardListeners(holder) {
+        holder.addEventListener('pointerdown', e => {
+            isPointerDragging = true;
+            prevPointerPos = { x: e.clientX, y: e.clientY };
+        });
+        window.addEventListener('pointermove', e => {
+            if (!isPointerDragging) return;
+            const dx = e.clientX - prevPointerPos.x;
+            const dy = e.clientY - prevPointerPos.y;
+            prevPointerPos = { x: e.clientX, y: e.clientY };
+            cameraYaw -= dx * 0.0075;
+            cameraPitch = Math.max(0.08, Math.min(1.25, cameraPitch + dy * 0.0065));
+        });
+        window.addEventListener('pointerup', () => { isPointerDragging = false; });
+
+        window.addEventListener('keydown', e => {
+            if (!isGameRunning) return;
+            const tag = document.activeElement && document.activeElement.tagName;
+            if (tag === 'INPUT' || tag === 'SELECT' || tag === 'TEXTAREA') return;
+
+            const k = e.key.toLowerCase();
+            if (k === 'w' || e.key === 'ArrowUp') moveKeys.forward = true;
+            if (k === 's' || e.key === 'ArrowDown') moveKeys.backward = true;
+            if (k === 'a' || e.key === 'ArrowLeft') moveKeys.left = true;
+            if (k === 'd' || e.key === 'ArrowRight') moveKeys.right = true;
+            if (e.code === 'Space') {
+                e.preventDefault();
+                triggerCharacterJump();
+            }
+            if (k === 'e' || e.key === 'Shift') {
+                e.preventDefault();
+                triggerNearbyInteraction();
+            }
+        });
+
+        window.addEventListener('keyup', e => {
+            const k = e.key.toLowerCase();
+            if (k === 'w' || e.key === 'ArrowUp') moveKeys.forward = false;
+            if (k === 's' || e.key === 'ArrowDown') moveKeys.backward = false;
+            if (k === 'a' || e.key === 'ArrowLeft') moveKeys.left = false;
+            if (k === 'd' || e.key === 'ArrowRight') moveKeys.right = false;
+        });
+    }
+
+    function setMoveKey(dir, state) {
+        moveKeys[dir] = state;
+    }
+
+    function triggerCharacterJump() {
+        if (!isGameRunning || !isGrounded) return;
+        ensureAudioContext();
+        playSound('jump');
+        playerVelY = 0.36;
+        isGrounded = false;
+    }
+
+    function getSupportHeightAt(x, z, currentY) {
+        let bestY = -999;
+        for (let i = 0; i < platformsList.length; i++) {
+            const p = platformsList[i];
+            if (p.requireBridgeZone && !unlockedBridges[p.requireBridgeZone]) continue;
+            if (x >= p.minX && x <= p.maxX && z >= p.minZ && z <= p.maxZ) {
+                if (p.topY <= currentY + 1.55 && p.topY > bestY) {
+                    bestY = p.topY;
+                }
+            }
+        }
+        return bestY;
+    }
+
+    function spawnWaterSplash(x, z) {
+        for (let i = 0; i < 12; i++) {
+            const drop = new THREE.Mesh(
+                new THREE.SphereGeometry(0.22, 6, 6),
+                new THREE.MeshBasicMaterial({ color: 0xe0f2fe })
+            );
+            drop.position.set(x, -1.2, z);
+            scene.add(drop);
+            splashParticles.push({
+                mesh: drop,
+                vx: (Math.random() - 0.5) * 0.28,
+                vy: 0.22 + Math.random() * 0.2,
+                vz: (Math.random() - 0.5) * 0.28,
+                life: 28
+            });
+        }
+    }
+
+    function animate3DLoop(timestamp) {
+        requestAnimationFrame(animate3DLoop);
+        if (!isGameRunning || !scene || !camera || !renderer) return;
+
+        const speed = 0.28;
+        let moveX = 0;
+        let moveZ = 0;
+        if (moveKeys.forward) {
+            moveX -= Math.sin(cameraYaw) * speed;
+            moveZ -= Math.cos(cameraYaw) * speed;
+        }
+        if (moveKeys.backward) {
+            moveX += Math.sin(cameraYaw) * speed;
+            moveZ += Math.cos(cameraYaw) * speed;
+        }
+        if (moveKeys.left) {
+            moveX -= Math.cos(cameraYaw) * speed;
+            moveZ += Math.sin(cameraYaw) * speed;
+        }
+        if (moveKeys.right) {
+            moveX += Math.cos(cameraYaw) * speed;
+            moveZ -= Math.sin(cameraYaw) * speed;
+        }
+
+        const nextX = playerPos.x + moveX;
+        const nextZ = playerPos.z + moveZ;
+        const supportNext = getSupportHeightAt(nextX, nextZ, playerPos.y);
+
+        playerPos.x = nextX;
+        playerPos.z = nextZ;
+
+        // Vertical Physics
+        playerPos.y += playerVelY;
+        playerVelY -= 0.018;
+
+        const floorY = getSupportHeightAt(playerPos.x, playerPos.z, playerPos.y);
+        if (floorY > -100 && playerPos.y <= floorY) {
+            playerPos.y = floorY;
+            playerVelY = 0;
+            isGrounded = true;
+        }
+
+        // Fall into Ocean Detection
+        if (playerPos.y < -3.2) {
+            playSound('fall');
+            spawnWaterSplash(playerPos.x, playerPos.z);
+            deductZoneLife("Terjatuh melewati batas pulau! -1 Hati ❤️");
+            const zCfg = zoneDefinitions[currentZoneIndex - 1];
+            playerPos.x = 0;
+            playerPos.y = 1.2;
+            playerPos.z = zCfg.centerZ + 16;
+            playerVelY = 0;
+        }
+
+        // Update Character Position & Walking Animation
+        if (playerGroup) {
+            playerGroup.position.set(playerPos.x, playerPos.y, playerPos.z);
+            const isMoving = Math.abs(moveX) > 0.001 || Math.abs(moveZ) > 0.001;
+            if (isMoving) {
+                const targetAngle = Math.atan2(moveX, moveZ);
+                playerGroup.rotation.y = targetAngle;
+                const swing = Math.sin(timestamp * 0.012) * 0.55;
+                if (playerLeftLeg) playerLeftLeg.rotation.x = swing;
+                if (playerRightLeg) playerRightLeg.rotation.x = -swing;
+                if (playerLeftArm) playerLeftArm.rotation.x = -swing;
+                if (playerRightArm) playerRightArm.rotation.x = swing;
+            } else {
+                if (playerLeftLeg) playerLeftLeg.rotation.x = 0;
+                if (playerRightLeg) playerRightLeg.rotation.x = 0;
+                if (playerLeftArm) playerLeftArm.rotation.x = 0;
+                if (playerRightArm) playerRightArm.rotation.x = 0;
+            }
+        }
+
+        // Detect Current Zone & Update Dynamic Weather + Music
+        let detectedZone = 1;
+        zoneDefinitions.forEach(zCfg => {
+            if (Math.abs(playerPos.z - zCfg.centerZ) < 55) {
+                detectedZone = zCfg.id;
+            }
+        });
+        if (detectedZone !== currentZoneIndex) {
+            currentZoneIndex = detectedZone;
+            const zCfg = zoneDefinitions[currentZoneIndex - 1];
+            scene.background.setHex(zCfg.skyColor);
+            scene.fog.color.setHex(zCfg.fogColor);
+            setBgmTheme('zone' + currentZoneIndex);
+            updateGameHUD();
+        }
+
+        // Weather Particles Update for Zone 4 (Snow) & Zone 5 (Rain/Storm)
+        if (weatherParticles) {
+            if (currentZoneIndex === 4 || currentZoneIndex === 5) {
+                weatherParticles.visible = true;
+                weatherParticles.position.set(playerPos.x, 0, playerPos.z);
+                const posAttr = weatherParticles.geometry.attributes.position;
+                const fallSpeed = currentZoneIndex === 5 ? 0.55 : 0.16;
+                for (let i = 1; i < posAttr.array.length; i += 3) {
+                    posAttr.array[i] -= fallSpeed;
+                    if (posAttr.array[i] < 0) posAttr.array[i] = 34;
+                }
+                posAttr.needsUpdate = true;
+            } else {
+                weatherParticles.visible = false;
+            }
+        }
+
+        // Animate NPCs waving, Chests & Keys rotating
+        npcObjects.forEach(npc => {
+            if (npc.userData.rightArmGroup) {
+                npc.userData.rightArmGroup.rotation.z = 0.25 + Math.sin(timestamp * 0.005) * 0.2;
+            }
+        });
+
+        Object.keys(keyObjects).forEach(zId => {
+            const kMesh = keyObjects[zId];
+            if (kMesh && kMesh.visible) {
+                kMesh.rotation.y += 0.035;
+                const dx = playerPos.x - kMesh.position.x;
+                const dz = playerPos.z - kMesh.position.z;
+                if (Math.hypot(dx, dz) < 2.6) {
+                    kMesh.visible = false;
+                    collectedZoneKeys[zId] = true;
+                    unlockedBridges[zId] = true;
+                    if (gateBarriers[zId]) gateBarriers[zId].visible = false;
+                    playSound('success');
+                    showSystemToast(`Kunci Zona ${zId} berhasil diambil! Gerbang jembatan menuju Zona ${ parseInt(zId) + 1 } kini TERBUKA!`);
+                    updateGameHUD();
+                }
+            }
+        });
+
+        if (finishCrownMesh) {
+            finishCrownMesh.rotation.y += 0.03;
+            const dCrown = Math.hypot(playerPos.x - finishCrownMesh.position.x, playerPos.z - finishCrownMesh.position.z);
+            if (dCrown < 3.0 && Object.keys(solvedQuests).length >= 10) {
+                showAppreciationModal();
+            }
+        }
+
+        // Update Splash Particles
+        for (let i = splashParticles.length - 1; i >= 0; i--) {
+            const sp = splashParticles[i];
+            sp.mesh.position.x += sp.vx;
+            sp.mesh.position.y += sp.vy;
+            sp.mesh.position.z += sp.vz;
+            sp.vy -= 0.015;
+            sp.life--;
+            if (sp.life <= 0) {
+                scene.remove(sp.mesh);
+                splashParticles.splice(i, 1);
+            }
+        }
+
+        // Check Nearby NPC or Mission Box Interaction
+        checkProximityInteractions();
+
+        // Update 360 Orbit Camera & Precision Compass
+        const camDist = 14.5;
+        const camX = playerPos.x + Math.sin(cameraYaw) * Math.cos(cameraPitch) * camDist;
+        const camY = playerPos.y + Math.sin(cameraPitch) * camDist + 2.2;
+        const camZ = playerPos.z + Math.cos(cameraYaw) * Math.cos(cameraPitch) * camDist;
+        camera.position.set(camX, camY, camZ);
+        camera.lookAt(playerPos.x, playerPos.y + 1.8, playerPos.z);
+
+        // Camera forward azimuth: when cameraYaw = 0, player/camera looks toward North (-Z).
+        // Rotating camera clockwise increases heading angle accurately in [0..359] degrees.
+        const compassDial = document.getElementById('compass-dial');
+        if (compassDial) {
+            const dialAngleDeg = (cameraYaw * 180 / Math.PI);
+            compassDial.style.transform = `rotate(${dialAngleDeg.toFixed(1)}deg)`;
+        }
+        const headingTextEl = document.getElementById('compass-heading-text');
+        if (headingTextEl) {
+            let headingDeg = Math.round((-cameraYaw * 180 / Math.PI) % 360);
+            if (headingDeg < 0) headingDeg += 360;
+            const dirs = ['U', 'TL', 'T', 'TG', 'S', 'BD', 'B', 'BL'];
+            const dirLabel = dirs[Math.round(headingDeg / 45) % 8];
+            headingTextEl.textContent = `${dirLabel} • ${headingDeg}°`;
+        }
+
+        renderer.render(scene, camera);
+    }
+
+    function checkProximityInteractions() {
+        nearbyTarget = null;
+        let minDist = 4.2;
+
+        npcObjects.forEach(npc => {
+            const d = Math.hypot(playerPos.x - npc.position.x, playerPos.z - npc.position.z);
+            if (d < minDist) {
+                minDist = d;
+                nearbyTarget = { kind: 'npc', quest: npc.userData.quest };
+            }
+        });
+
+        boxObjects.forEach(box => {
+            const d = Math.hypot(playerPos.x - box.position.x, playerPos.z - box.position.z);
+            if (d < minDist && Math.abs(playerPos.y - box.position.y) < 3.2) {
+                minDist = d;
+                nearbyTarget = { kind: 'box', quest: box.userData.quest, boxObj: box };
+            }
+        });
+
+        const promptBtn = document.getElementById('btn-interact-prompt');
+        const promptLabel = document.getElementById('interact-prompt-label');
+        if (nearbyTarget) {
+            promptBtn.classList.remove('hidden');
+            promptBtn.classList.add('flex');
+            promptLabel.textContent = nearbyTarget.kind === 'npc'
+                ? `SAPA ${nearbyTarget.quest.npcName.toUpperCase()} (E / Shift)`
+                : `BUKA KOTAK ${nearbyTarget.quest.id} (E / Shift)`;
+        } else {
+            promptBtn.classList.add('hidden');
+            promptBtn.classList.remove('flex');
+        }
+    }
+
+    function triggerNearbyInteraction() {
+        if (!nearbyTarget) return;
+        ensureAudioContext();
+        playSound('click');
+        if (nearbyTarget.kind === 'npc') {
+            openNPCDialogModal(nearbyTarget.quest);
+        } else {
+            openQuizBoxModal(nearbyTarget.quest);
+        }
+    }
+
+    // =========================================================================
+    // 7. NPC DIALOGUE & 5 INTERACTIVE QUIZ RENDERERS + ANSWER KEY & EXPLANATION
+    // =========================================================================
+    function openNPCDialogModal(quest) {
+        document.getElementById('dialog-badge').textContent = `WARGA PEMANDU • ZONA ${quest.zone}`;
+        document.getElementById('dialog-title').textContent = `${quest.npcName} — Penasihat Konstitusi`;
+        const body = document.getElementById('dialog-content-body');
+        const isDone = !!solvedQuests[quest.id];
+
+        body.innerHTML = `
+            <div class="bg-slate-900/90 border border-emerald-400/40 rounded-2xl p-4 sm:p-5 space-y-3">
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 rounded-2xl bg-emerald-500/20 border border-emerald-400 flex items-center justify-center text-emerald-300 text-xl">
+                        <i class="fa-solid ${quest.npcGender === 'female' ? 'fa-user-graduate' : 'fa-user-tie'}"></i>
+                    </div>
+                    <div>
+                        <div class="font-black text-white text-base">${quest.npcName}</div>
+                        <div class="text-xs text-emerald-300">Pemandu Misi KOTAK ${quest.id}</div>
+                    </div>
+                </div>
+                <p class="text-slate-100 leading-relaxed text-xs sm:text-base bg-slate-950/80 p-3.5 rounded-xl border border-slate-800">
+                    "${quest.npcGreeting}"
+                </p>
+                <div class="flex flex-wrap items-center justify-between gap-2 pt-2">
+                    <span class="text-xs font-bold ${isDone ? 'text-emerald-400' : 'text-amber-300'}">
+                        <i class="fa-solid ${isDone ? 'fa-circle-check' : 'fa-compass'} mr-1"></i>
+                        ${isDone ? `KOTAK ${quest.id} sudah diselesaikan!` : `Target: Temukan KOTAK ${quest.id} di atas bukit umpak!`}
+                    </span>
+                    <button onclick="closeModal('modal-quiz-dialog')" class="px-5 py-2 rounded-xl bg-gradient-to-r from-amber-400 to-orange-500 text-slate-950 font-black text-xs sm:text-sm">
+                        Siap Laksanakan!
+                    </button>
+                </div>
+            </div>
+        `;
+        openModal('modal-quiz-dialog');
+    }
+
+    let activeQuizQuest = null;
+    let tempTFState = {};
+    let tempMatchSelectedLeft = null;
+    let tempMatchPairs = {};
+    let tempWordBankBlanks = [];
+
+    function openQuizBoxModal(quest) {
+        activeQuizQuest = quest;
+        document.getElementById('dialog-badge').textContent = `KOTAK ${quest.id} • ZONA ${quest.zone}`;
+        document.getElementById('dialog-title').textContent = `Tantangan Konstitusi (Pemandu: ${quest.npcName})`;
+        const body = document.getElementById('dialog-content-body');
+
+        let interactiveHTML = '';
+        if (quest.type === 'pg') {
+            interactiveHTML = `
+                <div class="space-y-2">
+                    ${quest.options.map((opt, idx) => `
+                        <button onclick="submitPGQuizAnswer(${idx})" class="w-full text-left p-3 rounded-xl bg-slate-900 hover:bg-amber-500/20 border border-slate-700 hover:border-amber-400 text-slate-100 font-semibold text-xs sm:text-sm transition">
+                            ${opt}
+                        </button>
+                    `).join('')}
+                </div>
+            `;
+        } else if (quest.type === 'tf') {
+            tempTFState = {};
+            interactiveHTML = `
+                <div class="space-y-2.5">
+                    ${quest.statements.map((st, idx) => `
+                        <div class="p-3 rounded-xl bg-slate-900 border border-slate-700 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                            <span class="text-slate-100 text-xs sm:text-sm">${idx + 1}. ${st.text}</span>
+                            <div class="flex items-center gap-2 shrink-0">
+                                <button type="button" id="tf-btn-${idx}-true" onclick="selectTFOption(${idx}, true)" class="px-3 py-1.5 rounded-lg bg-slate-800 border border-slate-600 text-xs font-bold">BENAR</button>
+                                <button type="button" id="tf-btn-${idx}-false" onclick="selectTFOption(${idx}, false)" class="px-3 py-1.5 rounded-lg bg-slate-800 border border-slate-600 text-xs font-bold">SALAH</button>
+                            </div>
+                        </div>
+                    `).join('')}
+                    <button onclick="submitTFQuizAnswer()" class="px-6 py-2.5 rounded-xl bg-gradient-to-r from-amber-400 to-orange-500 text-slate-950 font-black text-xs sm:text-sm">Periksa Jawaban</button>
+                </div>
+            `;
+        } else if (quest.type === 'match') {
+            tempMatchSelectedLeft = null;
+            tempMatchPairs = {};
+            const shuffledRight = [...quest.pairs.map(p => p.answer)].sort(() => Math.random() - 0.5);
+            interactiveHTML = `
+                <div class="space-y-3">
+                    <p class="text-xs text-amber-300 font-bold">Ketuk item di kolom kiri, lalu ketuk pasangannya yang sesuai di kolom kanan:</p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div class="space-y-2">
+                            ${quest.pairs.map((p, idx) => `
+                                <button type="button" id="match-left-${idx}" onclick="selectMatchLeft(${idx})" class="w-full text-left p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-xs sm:text-sm font-bold text-sky-300">
+                                    ${p.prompt} <span id="match-badge-${idx}" class="block text-[11px] text-emerald-300 font-normal mt-0.5">Belum dipasang</span>
+                                </button>
+                            `).join('')}
+                        </div>
+                        <div class="space-y-2">
+                            ${shuffledRight.map((ans) => `
+                                <button type="button" onclick="selectMatchRight('${ans.replace(/'/g, "\\'")}')" class="w-full text-left p-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-xs sm:text-sm text-slate-200">
+                                    ${ans}
+                                </button>
+                            `).join('')}
+                        </div>
+                    </div>
+                    <button onclick="submitMatchQuizAnswer()" class="px-6 py-2.5 rounded-xl bg-gradient-to-r from-amber-400 to-orange-500 text-slate-950 font-black text-xs sm:text-sm">Periksa Pasangan</button>
+                </div>
+            `;
+        } else if (quest.type === 'dropdown') {
+            interactiveHTML = `
+                <div class="space-y-3">
+                    ${quest.dropdowns.map((dd, idx) => `
+                        <div class="p-3 rounded-xl bg-slate-900 border border-slate-700 space-y-1.5">
+                            <label class="block text-xs sm:text-sm font-semibold text-slate-200">${dd.label}</label>
+                            <select id="quiz-dd-${idx}" class="w-full p-2.5 rounded-xl bg-slate-950 border border-amber-400/50 text-amber-300 font-bold text-xs sm:text-sm">
+                                ${dd.options.map(o => `<option value="${o}">${o}</option>`).join('')}
+                            </select>
+                        </div>
+                    `).join('')}
+                    <button onclick="submitDropdownQuizAnswer()" class="px-6 py-2.5 rounded-xl bg-gradient-to-r from-amber-400 to-orange-500 text-slate-950 font-black text-xs sm:text-sm">Periksa Jawaban</button>
+                </div>
+            `;
+        } else if (quest.type === 'wordbank') {
+            tempWordBankBlanks = new Array(quest.blanks.length).fill("");
+            interactiveHTML = `
+                <div class="space-y-3">
+                    <div id="wordbank-sentence-box" class="p-3.5 rounded-xl bg-slate-900 border border-amber-400/40 text-xs sm:text-base leading-relaxed font-semibold text-white"></div>
+                    <div class="flex flex-wrap gap-2">
+                        ${quest.wordBank.map(w => `
+                            <button type="button" onclick="pickWordForBlank('${w}')" class="px-3.5 py-1.5 rounded-xl bg-sky-500/20 hover:bg-sky-500/40 border border-sky-400 text-sky-200 font-extrabold text-xs sm:text-sm">
+                                + ${w}
+                            </button>
+                        `).join('')}
+                        <button type="button" onclick="resetWordBankBlanks()" class="px-3 py-1.5 rounded-xl bg-slate-800 text-slate-300 text-xs font-bold">Ulangi Kata</button>
+                    </div>
+                    <button onclick="submitWordBankQuizAnswer()" class="px-6 py-2.5 rounded-xl bg-gradient-to-r from-amber-400 to-orange-500 text-slate-950 font-black text-xs sm:text-sm">Periksa Susunan Kata</button>
+                </div>
+            `;
+        }
+
+        body.innerHTML = `
+            <div class="bg-slate-900/85 border border-amber-400/35 rounded-2xl p-4 space-y-3">
+                <p class="font-bold text-white text-xs sm:text-base leading-relaxed">${quest.question}</p>
+                ${interactiveHTML}
+                <div id="quiz-feedback-area" class="hidden"></div>
+            </div>
+        `;
+
+        if (quest.type === 'wordbank') {
+            renderWordBankSentence();
+        }
+        if (solvedQuests[quest.id]) {
+            renderAnswerFeedbackBox(true, true);
+        }
+        openModal('modal-quiz-dialog');
+    }
+
+    function selectTFOption(idx, val) {
+        tempTFState[idx] = val;
+        const tBtn = document.getElementById(`tf-btn-${idx}-true`);
+        const fBtn = document.getElementById(`tf-btn-${idx}-false`);
+        if (val) {
+            tBtn.className = 'px-3 py-1.5 rounded-lg bg-emerald-500 text-slate-950 text-xs font-black';
+            fBtn.className = 'px-3 py-1.5 rounded-lg bg-slate-800 border border-slate-600 text-xs font-bold';
+        } else {
+            fBtn.className = 'px-3 py-1.5 rounded-lg bg-rose-500 text-white text-xs font-black';
+            tBtn.className = 'px-3 py-1.5 rounded-lg bg-slate-800 border border-slate-600 text-xs font-bold';
+        }
+    }
+
+    function selectMatchLeft(idx) {
+        tempMatchSelectedLeft = idx;
+        activeQuizQuest.pairs.forEach((_, i) => {
+            const el = document.getElementById('match-left-' + i);
+            if (el) {
+                el.classList.toggle('border-amber-400', i === idx);
+            }
+        });
+    }
+
+    function selectMatchRight(answerText) {
+        if (tempMatchSelectedLeft === null) return;
+        tempMatchPairs[tempMatchSelectedLeft] = answerText;
+        const badge = document.getElementById('match-badge-' + tempMatchSelectedLeft);
+        if (badge) badge.textContent = `Dipasang: ${answerText}`;
+    }
+
+    function renderWordBankSentence() {
+        if (!activeQuizQuest) return;
+        let html = activeQuizQuest.sentenceTemplate;
+        activeQuizQuest.blanks.forEach((_, i) => {
+            const val = tempWordBankBlanks[i] || `___[${i + 1}]___`;
+            html = html.replace(`[${i + 1}]`, `<span class="px-2 py-0.5 rounded bg-amber-400 text-slate-950 font-black mx-1">${val}</span>`);
+        });
+        const box = document.getElementById('wordbank-sentence-box');
+        if (box) box.innerHTML = html;
+    }
+
+    function pickWordForBlank(word) {
+        const emptyIdx = tempWordBankBlanks.findIndex(v => !v);
+        if (emptyIdx !== -1) {
+            tempWordBankBlanks[emptyIdx] = word;
+            renderWordBankSentence();
+        }
+    }
+
+    function resetWordBankBlanks() {
+        if (!activeQuizQuest) return;
+        tempWordBankBlanks = new Array(activeQuizQuest.blanks.length).fill("");
+        renderWordBankSentence();
+    }
+
+    function submitPGQuizAnswer(selectedIndex) {
+        const isCorrect = selectedIndex === activeQuizQuest.correctIndex;
+        finalizeQuestAttempt(isCorrect);
+    }
+
+    function submitTFQuizAnswer() {
+        const allCorrect = activeQuizQuest.statements.every((st, idx) => tempTFState[idx] === st.correct);
+        finalizeQuestAttempt(allCorrect);
+    }
+
+    function submitMatchQuizAnswer() {
+        const allCorrect = activeQuizQuest.pairs.every((p, idx) => tempMatchPairs[idx] === p.answer);
+        finalizeQuestAttempt(allCorrect);
+    }
+
+    function submitDropdownQuizAnswer() {
+        const allCorrect = activeQuizQuest.dropdowns.every((dd, idx) => {
+            const sel = document.getElementById('quiz-dd-' + idx);
+            return sel && sel.value === dd.correct;
+        });
+        finalizeQuestAttempt(allCorrect);
+    }
+
+    function submitWordBankQuizAnswer() {
+        const allCorrect = activeQuizQuest.blanks.every((b, idx) => tempWordBankBlanks[idx] === b);
+        finalizeQuestAttempt(allCorrect);
+    }
+
+    function finalizeQuestAttempt(isCorrect) {
+        const q = activeQuizQuest;
+        if (isCorrect) {
+            playSound('success');
+            if (!solvedQuests[q.id]) {
+                solvedQuests[q.id] = true;
+                playerScore += 100;
+                const boxObj = boxObjects.find(b => b.userData.quest.id === q.id);
+                if (boxObj && boxObj.userData.baseChest) {
+                    boxObj.userData.baseChest.material.color.setHex(0x10b981);
+                }
+                checkZoneKeySpawn(q.zone);
+            }
+            updateGameHUD();
+            renderAnswerFeedbackBox(true, false);
+        } else {
+            playSound('wrong');
+            deductZoneLife(`Jawaban pada KOTAK ${q.id} belum tepat! -1 Hati ❤️`);
+            renderAnswerFeedbackBox(false, false);
+        }
+    }
+
+    function renderAnswerFeedbackBox(isCorrect, isReplay) {
+        const q = activeQuizQuest;
+        const fbArea = document.getElementById('quiz-feedback-area');
+        if (!fbArea) return;
+        fbArea.classList.remove('hidden');
+        fbArea.innerHTML = `
+            <div class="mt-3 p-4 rounded-2xl border-2 ${isCorrect ? 'bg-emerald-950/90 border-emerald-400' : 'bg-rose-950/90 border-rose-400'} space-y-2">
+                <div class="font-black text-sm sm:text-base ${isCorrect ? 'text-emerald-300' : 'text-rose-300'} flex items-center gap-2">
+                    <i class="fa-solid ${isCorrect ? 'fa-circle-check' : 'fa-circle-xmark'}"></i>
+                    <span>${isReplay ? 'Kotak Misi Telah Tuntas' : (isCorrect ? ' Luar Biasa! Jawabanmu Benar (+100 Poin)' : 'Jawaban Kurang Tepat (-1 Hati ❤️)')}</span>
+                </div>
+                <div class="p-2.5 rounded-xl bg-slate-950/85 border border-amber-400/40 text-xs sm:text-sm">
+                    <div class="font-extrabold text-amber-300">Kunci Jawaban:</div>
+                    <div class="text-white font-semibold mt-0.5">${q.answerKeyText}</div>
+                </div>
+                <div class="text-xs sm:text-sm text-slate-200 leading-relaxed">
+                    <strong class="text-sky-300">Pembahasan Konstitusi:</strong> ${q.explanation}
+                </div>
+                <div class="pt-1 flex justify-end">
+                    <button onclick="closeModal('modal-quiz-dialog')" class="px-5 py-2 rounded-xl bg-amber-400 text-slate-950 font-black text-xs sm:text-sm">
+                        Lanjutkan Petualangan
+                    </button>
+                </div>
+            </div>
+        `;
+    }
+
+    function checkZoneKeySpawn(zoneId) {
+        const zoneQuests = missionQuests.filter(m => m.zone === zoneId);
+        const allZoneSolved = zoneQuests.every(m => solvedQuests[m.id]);
+        if (allZoneSolved) {
+            const zCfg = zoneDefinitions[zoneId - 1];
+            if (keyObjects[zoneId] && !collectedZoneKeys[zoneId]) {
+                keyObjects[zoneId].visible = true;
+                showSystemToast(`Kedua kotak Zona ${zoneId} selesai! KUNCI EMAS 3D telah muncul di ${zCfg.keyHint}!`);
+            } else if (zoneId === 5) {
+                showSystemToast("Seluruh 10 Kotak Misi Tuntas! Sentuh MAHKOTA FINISH di ujung Utara Zona 5!");
+            }
+        }
+    }
+
+    function deductZoneLife(reasonText) {
+        zoneLives[currentZoneIndex] = Math.max(0, (zoneLives[currentZoneIndex] || 3) - 1);
+        if (zoneLives[currentZoneIndex] === 0) {
+            zoneLives[currentZoneIndex] = 3;
+            showSystemToast(`${reasonText} Nyawa Zona ${currentZoneIndex} habis, direset kembali ke 3 Hati ❤️!`);
+        } else {
+            showSystemToast(reasonText);
+        }
+        updateGameHUD();
+    }
+
+    function updateGameHUD() {
+        const zCfg = zoneDefinitions[currentZoneIndex - 1];
+        const badgeEl = document.getElementById('hud-zone-badge');
+        if (badgeEl && zCfg) badgeEl.textContent = zCfg.name;
+
+        const heartsEl = document.getElementById('hud-hearts');
+        const lives = zoneLives[currentZoneIndex] || 3;
+        if (heartsEl) {
+            heartsEl.innerHTML = [1, 2, 3].map(i =>
+                `<i class="fa-solid fa-heart ${i <= lives ? 'text-rose-500' : 'text-slate-600'}"></i>`
+            ).join('');
+        }
+
+        document.getElementById('hud-score-val').textContent = String(playerScore);
+        document.getElementById('hud-box-val').textContent = `${Object.keys(solvedQuests).length}/10`;
+
+        const zoneQuests = missionQuests.filter(q => q.zone === currentZoneIndex);
+        const pending = zoneQuests.find(q => !solvedQuests[q.id]);
+        const titleEl = document.getElementById('hud-mission-title');
+        const descEl = document.getElementById('hud-mission-desc');
+        if (titleEl && descEl) {
+            titleEl.textContent = zCfg.name;
+            if (pending) {
+                descEl.textContent = `Sapa ${pending.npcName} atau naik ke bukit umpak untuk membuka KOTAK ${pending.id}!`;
+            } else if (currentZoneIndex < 5 && !collectedZoneKeys[currentZoneIndex]) {
+                descEl.textContent = `Ambil KUNCI EMAS 3D di ${zCfg.keyHint} untuk membuka gerbang jembatan!`;
+            } else if (currentZoneIndex < 5) {
+                descEl.textContent = `Gerbang terbuka! Seberangi jembatan menuju Zona ${currentZoneIndex + 1}.`;
+            } else {
+                descEl.textContent = `Menuju MAHKOTA FINISH di ujung Utara Zona 5!`;
+            }
+        }
+    }
+
+    function teleportNearActiveNPC() {
+        const zoneQuests = missionQuests.filter(q => q.zone === currentZoneIndex);
+        const target = zoneQuests.find(q => !solvedQuests[q.id]) || zoneQuests[0];
+        if (!target) return;
+        playerPos.x = target.npcPos.x;
+        playerPos.y = 1.0;
+        playerPos.z = target.npcPos.z + 2.4;
+        playerVelY = 0;
+    }
+
+    function teleportNearActiveBox() {
+        const zoneQuests = missionQuests.filter(q => q.zone === currentZoneIndex);
+        const target = zoneQuests.find(q => !solvedQuests[q.id]) || zoneQuests[0];
+        if (!target) return;
+        playerPos.x = target.boxPos.x;
+        playerPos.y = target.boxPos.y + 0.5;
+        playerPos.z = target.boxPos.z + 2.2;
+        playerVelY = 0;
+    }
+
+    let toastTimer = null;
+    function showSystemToast(msg) {
+        const banner = document.getElementById('game-toast-banner');
+        const txt = document.getElementById('game-toast-text');
+        if (!banner || !txt) return;
+        txt.textContent = msg;
+        banner.classList.remove('hidden');
+        banner.classList.add('flex');
+        if (toastTimer) clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => {
+            banner.classList.add('hidden');
+            banner.classList.remove('flex');
+        }, 4200);
+    }
+
+    function showAppreciationModal() {
+        playSound('success');
+        const sumEl = document.getElementById('appreciation-summary');
+        if (sumEl) {
+            sumEl.innerHTML = `Selamat kepada <strong>${playerCustomization.name}</strong>! Anda telah menuntaskan seluruh 12 Slide Materi dan 10 Kotak Misi Konstitusi di 5 Zona Kepulauan dengan skor akhir <strong>${playerScore} Poin</strong>.`;
+        }
+        openModal('modal-appreciation');
+    }
+</script>
+</body>
+</html>
